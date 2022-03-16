@@ -4,11 +4,7 @@
     "private": true,
     "scripts": {
         "serve": "vite --port 3000",
-        "seuso": "vite --port 3000 --mode teste",
         "preview": "vite --port 3000 preview",
-        "teste": "vue-tsc --noEmit && vite build --mode teste",
-        "homologacao": "vue-tsc --noEmit && vite build --mode homologacao",
-        "producao": "vue-tsc --noEmit && vite build --mode producao",
         "test": "vitest --dom --globals",
         "vue-cli:serve": "vue-cli-service serve --port 3000 --mode local",
         "vue-cli:build": "vue-cli-service build",
