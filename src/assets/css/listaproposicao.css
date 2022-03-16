@@ -12,7 +12,12 @@
 }
 
 .lista-proposicao-item {
-    padding: 0;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--etl-light);
+}
+
+.lista-proposicao-item:last-child {
+    border: 0;
 }
 
 .card-proposicao{

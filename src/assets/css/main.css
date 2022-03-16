@@ -14,7 +14,8 @@
     --etl-blue:  #5E98F6;
     --etl-green: #598B4F;
     --etl-dark: black;
-    --etl-light: gray;
+    --etl-light: #D7D7D7;
+    --etl-white: #FFF;
 }
 
 body {
