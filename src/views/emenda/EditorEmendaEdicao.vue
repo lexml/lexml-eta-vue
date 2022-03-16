@@ -136,7 +136,18 @@
             <div class="container-fluid mt-3">
                 <div class="row">
                     <section class="col-md-7 col-sm-12">
-                        <card-proposicao v-if="proposicao" :proposicao="proposicao" />
+                        <input
+                            type="input"
+                            class="form-control"
+                            placeholder="Título da emenda"
+                            aria-label="Título da emenda"
+                            required
+                        />
+                        <card-proposicao
+                            class="editar-emenda-dados"
+                            v-if="proposicao"
+                            :proposicao="proposicao"
+                        />
 
                         <span class="proposicao-actions d-md-none">
                             <button
@@ -177,20 +188,25 @@
     </div>
 </template>
 <style>
+.editar-emenda-dados {
+    padding: 10px;
+}
 .tab-pane {
     padding: 16px;
     border: 1px solid #dee2e6;
     border-top: none;
     overflow: hidden;
     overflow-y: scroll;
-    height: calc(100vh - 145px);
+    height: calc(100vh - 152px);
 }
 .nav-link.active {
     font-weight: bold;
 }
 lexml-eta-articulacao {
     overflow: hidden;
-    height: calc(100vh - 185px) !important;
+    height: calc(100vh - 230px) !important;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 </style>
 
@@ -201,8 +217,6 @@ lexml-eta-articulacao {
 import "@lexml/lexml-eta";
 import "@lexml/lexml-eta/dist/assets/css/editor.css";
 import lexmlJsonixService from '../../servicos/lexmlJsonixService';
-// import lexmlJsonixService2 from '../../servicos/temp/lexmlJsonixService';
-
 import proposicaoService from "../..//servicos/proposicaoService";
 import { ref, onMounted, defineAsyncComponent } from 'vue';
 import { Proposicao } from "../../model";
@@ -253,10 +267,6 @@ function buscarLexmlJsonixProposicao(sigla: string, numero: string, ano: number)
         .then((jsonix): void => projetoNorma.value = jsonix)
         .then(() => simularClick())
         .finally(() => loading.value = false);
-
-    // lexmlJsonixService2
-    //     .buscarTextoLexmlAsJsonix(sigla, numero, ano)
-    //     .then((res) => console.log(11111, 'xml', res));
 }
 
 function onChange() {
