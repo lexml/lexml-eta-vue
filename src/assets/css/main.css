@@ -1,0 +1,33 @@
+@font-face {
+    font-family: 'Source Sans Pro';
+    /* src: url('/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf'); */
+    src: url('../../assets/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf');
+}
+@font-face {
+    font-family: 'Source Sans Pro';
+    /* src: url('/fonts/Source_Sans_Pro/SourceSansPro-Bold.ttf'); */
+    src: url('../../assets/fonts/Source_Sans_Pro/SourceSansPro-Bold.ttf');
+    font-weight: bold;
+}
+
+:root {
+    --etl-blue:  #5E98F6;
+    --etl-green: #598B4F;
+    --etl-dark: black;
+    --etl-light: gray;
+}
+
+body {
+
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 120%;
+}
+
+html {
+    height: -webkit-fill-available;
+}
