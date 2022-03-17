@@ -4,12 +4,12 @@
     "private": true,
     "scripts": {
         "serve": "vite --port 3000",
-        "build": "vue-tsc --noEmit && vite build",
+        "build": "rimraf dist && vue-tsc --noEmit && vite build",
         "build:ghpages": "rimraf dist && vue-tsc --noEmit && vite build --base=/lexml-eta-vue/",
         "preview": "vite --port 3000 preview",
         "test": "vitest --dom --globals",
         "vue-cli:serve": "vue-cli-service serve --port 3000",
-        "vue-cli:build": "vue-cli-service build",
+        "vue-cli:build": "rimraf dist && vue-cli-service build",
         "vue-cli:test:unit": "vue-cli-service test:unit",
         "vue-cli:test:e2e": "vue-cli-service test:e2e",
         "lint": "vue-cli-service lint"
@@ -47,6 +47,7 @@
         "happy-dom": "^2.45.0",
         "lint-staged": "^11.1.2",
         "prettier": "^2.4.1",
+        "rimraf": "^3.0.2",
         "sass": "^1.32.7",
         "sass-loader": "^12.0.0",
         "typescript": "~4.5.5",
