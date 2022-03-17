@@ -93,7 +93,7 @@
                         />
 
                         <!-- BOTÕES QUE ATIVAM AS MODAIS -->
-                        <span class="proposicao-actions ">
+                        <span class="proposicao-actions d-md-none">
                             <button
                                 type="button"
                                 class="btn btn-labeled proposicao-action"
