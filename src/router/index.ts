@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import {
+    createRouter,
+    createWebHashHistory,
+    RouteRecordRaw
+} from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -29,7 +33,7 @@ interface ScrollPosition {
 }
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes,
     scrollBehavior(to, from, savedPosition) {
         const promise = new Promise<ScrollPosition | false>((resolve) => {
