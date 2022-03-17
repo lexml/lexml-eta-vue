@@ -67,7 +67,7 @@ const EditorEmendaAjuda = defineAsyncComponent(
 interface Props {
     itensMenu: string[];
     textoRotuloDispositivo: string;
-    emenda: object | null | undefined;
+    emenda?: object;
 }
 const props = defineProps<Props>();
 const itensMenu = computed(() => props.itensMenu);
