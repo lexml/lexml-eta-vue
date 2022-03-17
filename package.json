@@ -5,12 +5,11 @@
     "scripts": {
         "serve": "vite --port 3000",
         "build": "vue-tsc --noEmit && vite build",
+        "build:ghpages": "rimraf dist && vue-tsc --noEmit && vite build --base=/lexml-eta-vue/",
         "preview": "vite --port 3000 preview",
         "test": "vitest --dom --globals",
-        "vue-cli:serve": "vue-cli-service serve --port 3000 --mode local",
+        "vue-cli:serve": "vue-cli-service serve --port 3000",
         "vue-cli:build": "vue-cli-service build",
-        "vue-cli:teste": "vue-cli-service build --mode teste",
-        "vue-cli:homologacao": "vue-cli-service build --mode homologacao",
         "vue-cli:test:unit": "vue-cli-service test:unit",
         "vue-cli:test:e2e": "vue-cli-service test:e2e",
         "lint": "vue-cli-service lint"

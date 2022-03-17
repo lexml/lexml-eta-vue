@@ -1,4 +1,5 @@
 module.exports = {
+    publicPath: process.env.NODE_ENV === 'production' ? '/lexml-eta-vue/' : '/',
     transpileDependencies: true,
     chainWebpack: (config) => {
         config.module

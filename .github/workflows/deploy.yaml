@@ -7,26 +7,21 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: '12'
-      - name: setup git auth
-        env:
-          email: 'robsonbarrosdf@gmail.com'
-          username: 'robsonbarrosdf'
-          access_token: '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'
-        run: |
-          git config --global credential.helper store
-          echo "https://${access_token}:x-oauth-basic@github.com" > ~/.git-credentials
-          git config --global user.email $email
-          git config --global user.name $username
+          node-version: '16'
+
+      - name: Instala as dependências
+        run: npm install
+
+      - name: Build da aplicação
+        run: npm run build:ghpages
+
       - name: deploy to gh-pages
-        run: |
-          npm i
-          NODE_ENV=production npm run vue-cli:build
-          cd dist
-          git init
-          git add -A
-          git commit -m "🚀 Deploy id ${GITHUB_RUN_ID}"
-          git push -f "https://github.com/${GITHUB_REPOSITORY}.git" main:gh-pages
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: gh-pages
+          FOLDER: dist
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
