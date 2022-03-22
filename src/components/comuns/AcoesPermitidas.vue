@@ -91,7 +91,11 @@ import { AcaoPermitida, Emenda, Proposicao } from "../../model";
 import { getProposicaoFromObjeto } from '../../utils/typeUtils';
 interface Props {
     item: Proposicao | Emenda;
+<<<<<<< HEAD
     emenda: any;
+=======
+    emenda: any | "";
+>>>>>>> b6a1a2c (Adiciona função ao botão salvar, que baixa um arquivo json com o projetoNorma e a emenda ativa no lexml-eta)
     projetoNorma: any;
     acoesPermitidas: Array<AcaoPermitida>;
 }
