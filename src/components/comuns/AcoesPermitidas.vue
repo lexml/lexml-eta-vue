@@ -91,8 +91,8 @@ import { AcaoPermitida, Emenda, Proposicao } from "../../model";
 import { getProposicaoFromObjeto } from '../../utils/typeUtils';
 interface Props {
     item: Proposicao | Emenda;
-    emenda: any | "";
-    projetoNorma: any;
+    emenda: any; // TODO: Adicionar model para lexml-emenda.
+    projetoNorma: any; // TODO: Adicionar model para lexml-projetoNorma.
     acoesPermitidas: Array<AcaoPermitida>;
 }
 const props = defineProps<Props>();
