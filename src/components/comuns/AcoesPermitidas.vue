@@ -26,7 +26,7 @@
             </span>
             Salvar
         </button>
-        <!-- <button
+        <button
             v-if="acoesPermitidas.includes('abrir')"
             type="button"
             class="btn btn-labeled proposicao-action"
@@ -43,10 +43,10 @@
             v-if="acoesPermitidas.includes('abrir')"
             type="file"
             id="fileUpload"
-            accept=".txt"
+            accept="application/json"
             @change="selecionaArquivo($event)"
             style="display: none"
-        /> -->
+        />
 
 
         <!-- <button type="button" class="btn btn-labeled proposicao-action">
@@ -129,19 +129,19 @@ function salvar() {
     a.click();
 }
 
-// function abrir() {
-//   let fileUpload = document.getElementById('fileUpload');
-//   if (fileUpload != null) {
-//     fileUpload.click()
-//   }
-// }
+function abrir() {
+    let fileUpload = document.getElementById('fileUpload');
+    if (fileUpload != null) {
+        fileUpload.click();
+    }
+}
 
-// function selecionaArquivo($event: Event) {
-//     const fileInput = $event.target as HTMLInputElement;
-//     if (fileInput && fileInput.files) {
-//         console.log(fileInput.files[0]?.name);
-//     }
-// }
+function selecionaArquivo($event: Event) {
+    const fileInput = $event.target as HTMLInputElement;
+    if (fileInput && fileInput.files) {
+        console.log(fileInput.files[0]?.name);
+    }
+}
 </script>
 
 <style scoped src="../../assets/css/actions.css">
