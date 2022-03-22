@@ -26,6 +26,28 @@
             </span>
             Salvar
         </button>
+        <!-- <button
+            v-if="acoesPermitidas.includes('abrir')"
+            type="button"
+            class="btn btn-labeled proposicao-action"
+            @click="abrir"
+        >
+            <span class="btn-label">
+                <svg class="bi proposicao-action-icon">
+                    <use xlink:href="#folder2-open" />
+                </svg>
+            </span>
+            Abrir
+        </button>
+        <input
+            v-if="acoesPermitidas.includes('abrir')"
+            type="file"
+            id="fileUpload"
+            accept=".txt"
+            @change="selecionaArquivo($event)"
+            style="display: none"
+        /> -->
+
 
         <!-- <button type="button" class="btn btn-labeled proposicao-action">
                     <span class="btn-label">
@@ -69,6 +91,8 @@ import { AcaoPermitida, Emenda, Proposicao } from "../../model";
 import { getProposicaoFromObjeto } from '../../utils/typeUtils';
 interface Props {
     item: Proposicao | Emenda;
+    emenda: any | "";
+    projetoNorma: any;
     acoesPermitidas: Array<AcaoPermitida>;
 }
 const props = defineProps<Props>();
@@ -89,8 +113,35 @@ function emendar() {
 }
 
 function salvar() {
-    console.log('teste');
+    const { sigla, numero, ano } = getProposicaoFromObjeto(props.item);
+    const emendaJson = JSON.stringify({
+        'projetoNorma': props.projetoNorma,
+        'emenda': props.emenda || ""
+    });
+    const blob: Blob = new Blob([emendaJson], { type: 'application/json' });
+    const fileName = `${sigla} ${numero}/${ano}.json`;
+    const objectUrl: string = URL.createObjectURL(blob);
+    const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+
+    a.href = objectUrl;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
 }
+
+// function abrir() {
+//   let fileUpload = document.getElementById('fileUpload');
+//   if (fileUpload != null) {
+//     fileUpload.click()
+//   }
+// }
+
+// function selecionaArquivo($event: Event) {
+//     const fileInput = $event.target as HTMLInputElement;
+//     if (fileInput && fileInput.files) {
+//         console.log(fileInput.files[0]?.name);
+//     }
+// }
 </script>
 
 <style scoped src="../../assets/css/actions.css">

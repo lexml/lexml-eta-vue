@@ -27,8 +27,15 @@
                     <acoes-permitidas
                         v-if="proposicao"
                         :item="proposicao"
+                        :emenda="emenda"
+                        :projetoNorma="projetoNorma"
                         :acoes-permitidas="['salvar']"
                     />
+                    <!-- <acoes-permitidas
+                        v-if="proposicao"
+                        :item="proposicao"
+                        :acoes-permitidas="['abrir']"
+                    /> -->
                     <!-- <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <button type="button" class="btn btn-labeled proposicao-action">
