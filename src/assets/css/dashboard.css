@@ -1,3 +1,6 @@
+.bs-eta {
+    overflow: hidden;
+}
 .eta-search-form {
     display: flex;
     flex-direction: row;
@@ -46,6 +49,13 @@
     overflow: hidden;
     overflow-y: auto;
     max-height: calc(100vh - 325px);
+}
+
+.list-group-pesquisa {
+    padding: 0px;
+    overflow: hidden;
+    overflow-y: auto;
+    max-height: calc(100vh - 250px);
 }
 
 .card-dashboard-body {
@@ -115,7 +125,8 @@
 }
 
 .list-group-item-subtitle {
-
+    display: block;
+    width: 100%;
 }
 
 .list-group-item-data {
@@ -134,6 +145,10 @@
 
 @media screen and (max-width: 768px) {
     .bs-eta .list-group {
-        max-height: calc(100vh - 260px);
+        max-height: calc(100vh - 210px);
     }
+    .bs-eta .list-group-pesquisa {
+        max-height: calc(100vh - 150px);
+    }
+
 }
