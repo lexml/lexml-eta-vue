@@ -139,7 +139,12 @@ function abrir() {
 function selecionaArquivo($event: Event) {
     const fileInput = $event.target as HTMLInputElement;
     if (fileInput && fileInput.files) {
-        console.log(fileInput.files[0]?.name);
+        var fReader = new FileReader();
+        fReader.readAsText(fileInput.files[0]);
+        fReader.onloadend = (e) => {
+            const result = JSON.parse(e.target.result);
+            console.log(result);
+        };
     }
 }
 </script>
