@@ -25,7 +25,7 @@
                     id="navbarSupportedContent"
                 >
                     <acoes-permitidas
-                        v-if="proposicao"
+                        v-if="proposicao && emenda && projetoNorma"
                         :item="proposicao"
                         :emenda="emenda"
                         :projetoNorma="projetoNorma"
