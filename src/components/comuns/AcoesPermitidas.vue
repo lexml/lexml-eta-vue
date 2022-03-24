@@ -115,6 +115,9 @@ function emendar() {
 function salvar() {
     const { sigla, numero, ano } = getProposicaoFromObjeto(props.item);
     const emendaJson = JSON.stringify({
+        'sigla': sigla,
+        'numero': numero,
+        'ano': ano,
         'projetoNorma': props.projetoNorma,
         'emenda': props.emenda || ""
     });
@@ -143,7 +146,14 @@ function selecionaArquivo($event: Event) {
         fReader.readAsText(fileInput.files[0]);
         fReader.onloadend = (e) => {
             const result = JSON.parse(e.target.result);
-            console.log(result);
+            router.push({ // TODO: Mandar result.emenda
+                path: '/edicao',
+                query: {
+                    sigla: result.sigla,
+                    numero: result.numero,
+                    ano: result.ano
+                }
+            });
         };
     }
 }
