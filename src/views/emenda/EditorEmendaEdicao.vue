@@ -118,6 +118,7 @@
                             ref="lexmlEta"
                             modo="emenda"
                             :projetoNorma="projetoNorma"
+                            :emenda-modificada="emendaModificada"
                             @onchange="onChange"
                         />
                     </section>
@@ -194,6 +195,7 @@ interface Props {
     sigla: string;
     numero: string;
     ano: number;
+    emendaModificada?: string;
 }
 const props = defineProps<Props>();
 const projetoNorma = ref();

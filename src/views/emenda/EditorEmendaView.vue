@@ -1,6 +1,11 @@
 <template>
     <div v-if="sigla && numero && ano">
-        <editor-emenda-edicao :sigla="sigla" :numero="numero" :ano="ano" />
+        <editor-emenda-edicao
+            :sigla="sigla"
+            :numero="numero"
+            :ano="ano"
+            :emenda-modificada="route.params.emendaModificada"
+        />
     </div>
 </template>
 
