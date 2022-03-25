@@ -162,7 +162,7 @@ function selecionaArquivo($event: Event) {
                     ano: result.ano
                 },
                 params: {
-                    emendaModificada: JSON.stringify(result.emenda)
+                    emenda: JSON.stringify(result.emenda)
                 }
             });
         };

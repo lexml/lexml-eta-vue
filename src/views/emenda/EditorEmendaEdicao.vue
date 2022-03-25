@@ -118,7 +118,7 @@
                             ref="lexmlEta"
                             modo="emenda"
                             :projetoNorma="projetoNorma"
-                            :emenda-modificada="emendaModificada"
+                            :emenda="emendaModificada"
                             @onchange="onChange"
                         />
                     </section>
