@@ -195,7 +195,7 @@ interface Props {
     sigla: string;
     numero: string;
     ano: number;
-    emendaModificada?: string;
+    emendaModificada?: object;
 }
 const props = defineProps<Props>();
 const projetoNorma = ref();
