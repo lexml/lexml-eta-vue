@@ -1,6 +1,11 @@
 <template>
     <div v-if="sigla && numero && ano">
-        <editor-emenda-edicao :sigla="sigla" :numero="numero" :ano="ano" />
+        <editor-emenda-edicao
+            :sigla="sigla"
+            :numero="numero"
+            :ano="ano"
+            :emenda="JSON.parse(route.params.emenda || '{}')"
+        />
     </div>
 </template>
 

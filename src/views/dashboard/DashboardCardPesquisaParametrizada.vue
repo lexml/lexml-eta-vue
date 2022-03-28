@@ -44,15 +44,23 @@
                 >
                     Pesquisar
                 </button>
+                ou
+                <acoes-permitidas
+                    :acoes-permitidas="['abrir']"
+                />
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { toRefs, computed } from 'vue';
+import { toRefs, computed, defineAsyncComponent } from 'vue';
 import { useDashboardStore } from "../../stores/dashboardStore";
 const dashboardStore = useDashboardStore();
+
+const AcoesPermitidas = defineAsyncComponent(
+    () => import("../../components/comuns/AcoesPermitidas.vue")
+);
 
 interface Dados {
     sigla?: string;

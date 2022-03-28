@@ -25,17 +25,12 @@
                     id="navbarSupportedContent"
                 >
                     <acoes-permitidas
-                        v-if="proposicao"
+                        v-if="proposicao && emenda && projetoNorma"
                         :item="proposicao"
                         :emenda="emenda"
                         :projetoNorma="projetoNorma"
                         :acoes-permitidas="['salvar']"
                     />
-                    <!-- <acoes-permitidas
-                        v-if="proposicao"
-                        :item="proposicao"
-                        :acoes-permitidas="['abrir']"
-                    /> -->
                     <!-- <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <button type="button" class="btn btn-labeled proposicao-action">
@@ -123,6 +118,7 @@
                             ref="lexmlEta"
                             modo="emenda"
                             :projetoNorma="projetoNorma"
+                            :emenda="props.emenda"
                             @onchange="onChange"
                         />
                     </section>
@@ -199,6 +195,7 @@ interface Props {
     sigla: string;
     numero: string;
     ano: number;
+    emenda?: object;
 }
 const props = defineProps<Props>();
 const projetoNorma = ref();
