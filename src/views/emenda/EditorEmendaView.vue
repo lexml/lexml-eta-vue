@@ -4,7 +4,7 @@
             :sigla="sigla"
             :numero="numero"
             :ano="ano"
-            :emenda-modificada="JSON.parse(route.params.emenda)"
+            :emenda="JSON.parse(route.params.emenda || '{}')"
         />
     </div>
 </template>
