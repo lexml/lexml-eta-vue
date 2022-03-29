@@ -232,7 +232,7 @@ function buscarLexmlJsonixProposicao(sigla: string, numero: string, ano: number)
 }
 
 function onChange() {
-    emenda.value = lexmlEta.value.getComandoEmenda();
+    emenda.value = lexmlEta.value.getEmenda();
     comandoEmenda.value = lexmlEta.value.getComandoEmenda();
 }
 
