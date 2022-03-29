@@ -209,10 +209,11 @@ const itensMenu = ref<string[]>([]);
 const textoRotuloDispositivo = ref('');
 const lexmlEta = ref();
 
-const emenda = ref();
+const emenda = ref<object | undefined | null>(null);
 const comandoEmenda = ref();
 
 onMounted(() => {
+    emenda.value = props.emenda;
     buscarProposicao(props.sigla, props.numero, props.ano);
     buscarLexmlJsonixProposicao(props.sigla, props.numero, props.ano);
 });
