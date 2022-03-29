@@ -119,10 +119,11 @@
                             <strong>Carregando...</strong>
                         </div>
                         <lexml-eta
-                            v-else
+                            v-show="!loading"
                             ref="lexmlEta"
                             modo="emenda"
                             :projetoNorma="projetoNorma"
+                            :emenda="{}"
                             @onchange="onChange"
                         />
                     </section>
@@ -130,7 +131,7 @@
                         <editor-emenda-painel-lateral
                             :itens-menu="itensMenu"
                             :texto-rotulo-dispositivo="textoRotuloDispositivo"
-                            :emenda="emenda"
+                            :comando-emenda="comandoEmenda"
                         />
                     </aside>
                 </div>
@@ -140,7 +141,7 @@
         <editor-emenda-painel-modal
             :itens-menu="itensMenu"
             :texto-rotulo-dispositivo="textoRotuloDispositivo"
-            :emenda="emenda"
+            :emenda="comandoEmenda"
         />
     </div>
 </template>
@@ -171,8 +172,10 @@ lexml-eta-articulacao {
 </style>
 
 <script setup lang="ts">
-import "@lexml/lexml-eta";
-import "@lexml/lexml-eta/dist/assets/css/editor.css";
+// import "@lexml/lexml-eta";
+// import "@lexml/lexml-eta/dist/assets/css/editor.css";
+import '../../assets/js/index.min.js';
+
 import lexmlJsonixService from '../../servicos/lexmlJsonixService';
 import proposicaoService from "../..//servicos/proposicaoService";
 import { ref, onMounted, defineAsyncComponent } from 'vue';
@@ -201,7 +204,7 @@ interface Props {
     ano: number;
 }
 const props = defineProps<Props>();
-const projetoNorma = ref();
+const projetoNorma = ref(null);
 const loading = ref(true);
 
 const root = ref<HTMLElement>();
@@ -209,7 +212,9 @@ const proposicao = ref<Proposicao>();
 const itensMenu = ref<string[]>([]);
 const textoRotuloDispositivo = ref('');
 const lexmlEta = ref();
+
 const emenda = ref();
+const comandoEmenda = ref();
 
 onMounted(() => {
     buscarProposicao(props.sigla, props.numero, props.ano);
@@ -231,7 +236,8 @@ function buscarLexmlJsonixProposicao(sigla: string, numero: string, ano: number)
 }
 
 function onChange() {
-    emenda.value = lexmlEta.value.getEmenda();
+    emenda.value = lexmlEta.value.getComandoEmenda();
+    comandoEmenda.value = lexmlEta.value.getComandoEmenda();
 }
 
 let timer = 0;
@@ -242,7 +248,7 @@ function atualizarMenu() {
         itensMenu.value = Array.from(elItensMenu)
             .map((el) => el.textContent ?? '');
 
-        textoRotuloDispositivo.value = document.querySelector('.lx-eta-dropdown')?.closest('.container-td-direito')?.previousElementSibling?.querySelector('label')?.getAttribute('data-rotulo') ?? '';
+        textoRotuloDispositivo.value = document.querySelector('.lx-eta-dropdown')?.closest('.container__menu')?.previousElementSibling?.querySelector('label')?.getAttribute('data-rotulo') ?? '';
         // textoRotuloDispositivo.value = textoRotuloDispositivo.value.replace(' –', '');
     }, 300);
 }
