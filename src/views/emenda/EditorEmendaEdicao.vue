@@ -25,17 +25,12 @@
                     id="navbarSupportedContent"
                 >
                     <acoes-permitidas
-                        v-if="proposicao"
+                        v-if="proposicao && emenda && projetoNorma"
                         :item="proposicao"
                         :emenda="emenda"
                         :projetoNorma="projetoNorma"
                         :acoes-permitidas="['salvar']"
                     />
-                    <!-- <acoes-permitidas
-                        v-if="proposicao"
-                        :item="proposicao"
-                        :acoes-permitidas="['abrir']"
-                    /> -->
                     <!-- <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <button type="button" class="btn btn-labeled proposicao-action">
@@ -123,7 +118,7 @@
                             ref="lexmlEta"
                             modo="emenda"
                             :projetoNorma="projetoNorma"
-                            :emenda="{}"
+                            :emenda="emenda"
                             @onchange="onChange"
                         />
                     </section>
@@ -174,7 +169,7 @@ lexml-eta-articulacao {
 <script setup lang="ts">
 // import "@lexml/lexml-eta";
 // import "@lexml/lexml-eta/dist/assets/css/editor.css";
-import '../../assets/js/index.min.js';
+import '../../assets/js/lexml-eta/index.min.js';
 
 import lexmlJsonixService from '../../servicos/lexmlJsonixService';
 import proposicaoService from "../..//servicos/proposicaoService";
@@ -202,6 +197,7 @@ interface Props {
     sigla: string;
     numero: string;
     ano: number;
+    emenda?: object;
 }
 const props = defineProps<Props>();
 const projetoNorma = ref(null);

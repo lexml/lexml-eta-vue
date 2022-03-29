@@ -26,7 +26,7 @@
             </span>
             Salvar
         </button>
-        <!-- <button
+        <button
             v-if="acoesPermitidas.includes('abrir')"
             type="button"
             class="btn btn-labeled proposicao-action"
@@ -43,10 +43,10 @@
             v-if="acoesPermitidas.includes('abrir')"
             type="file"
             id="fileUpload"
-            accept=".txt"
+            accept="application/json"
             @change="selecionaArquivo($event)"
             style="display: none"
-        /> -->
+        />
 
 
         <!-- <button type="button" class="btn btn-labeled proposicao-action">
@@ -90,7 +90,7 @@ import { useRouter } from 'vue-router';
 import { AcaoPermitida, Emenda, Proposicao } from "../../model";
 import { getProposicaoFromObjeto } from '../../utils/typeUtils';
 interface Props {
-    item: Proposicao | Emenda;
+    item?: Proposicao | Emenda;
     emenda?: object;
     projetoNorma?: object | null;
     acoesPermitidas: Array<AcaoPermitida>;
@@ -101,47 +101,75 @@ const acoesPermitidas = ref(props.acoesPermitidas);
 const router = useRouter();
 
 function emendar() {
-    const { sigla, numero, ano } = getProposicaoFromObjeto(props.item);
-    router.push({
-        path: '/edicao',
-        query: {
-            sigla,
-            numero,
-            ano
-        }
-    });
+    if (props.item) {
+        const { sigla, numero, ano } = getProposicaoFromObjeto(props.item);
+        router.push({
+            path: '/edicao',
+            query: {
+                sigla,
+                numero,
+                ano
+            }
+        });
+    }
 }
 
 function salvar() {
-    const { sigla, numero, ano } = getProposicaoFromObjeto(props.item);
-    const emendaJson = JSON.stringify({
-        'projetoNorma': props.projetoNorma,
-        'emenda': props.emenda || ""
-    });
-    const blob: Blob = new Blob([emendaJson], { type: 'application/json' });
-    const fileName = `${sigla} ${numero}/${ano}.json`;
-    const objectUrl: string = URL.createObjectURL(blob);
-    const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+    if (props.item) {
+        const { sigla, numero, ano } = getProposicaoFromObjeto(props.item);
+        const emendaJson = JSON.stringify({
+            'sigla': sigla,
+            'numero': numero,
+            'ano': ano,
+            'projetoNorma': props.projetoNorma,
+            'emenda': props.emenda || ""
+        });
+        const blob: Blob = new Blob([
+            emendaJson
+        ], {
+            type: 'application/json'
+        });
+        const fileName = `${sigla} ${numero}/${ano}.json`;
+        const objectUrl: string = URL.createObjectURL(blob);
+        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
 
-    a.href = objectUrl;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
+        a.href = objectUrl;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+    }
 }
 
-// function abrir() {
-//   let fileUpload = document.getElementById('fileUpload');
-//   if (fileUpload != null) {
-//     fileUpload.click()
-//   }
-// }
+function abrir() {
+    let fileUpload = document.getElementById('fileUpload');
+    if (fileUpload != null) {
+        fileUpload.click();
+    }
+}
 
-// function selecionaArquivo($event: Event) {
-//     const fileInput = $event.target as HTMLInputElement;
-//     if (fileInput && fileInput.files) {
-//         console.log(fileInput.files[0]?.name);
-//     }
-// }
+function selecionaArquivo($event: Event) {
+    const fileInput = $event.target as HTMLInputElement;
+    if (fileInput && fileInput.files) {
+        var fReader = new FileReader();
+        fReader.readAsText(fileInput.files[0]);
+        fReader.onloadend = (e) => {
+            if (e.target?.result) {
+                const result = JSON.parse(e.target.result as string);
+                router.push({
+                    name: 'edicao',
+                    query: {
+                        sigla: result.sigla,
+                        numero: result.numero,
+                        ano: result.ano
+                    },
+                    params: {
+                        emenda: JSON.stringify(result.emenda)
+                    }
+                });
+            }
+        };
+    }
+}
 </script>
 
 <style scoped src="../../assets/css/actions.css">

@@ -23,6 +23,7 @@ const routes: Array<RouteRecordRaw> = [
             import(
                 /* webpackChunkName: "editorEmenda" */ "../views/emenda/EditorEmendaView.vue"
             ),
+        props: true,
     },
 ];
 

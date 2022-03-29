@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, computed, onMounted } from 'vue';
+import { defineAsyncComponent, computed } from 'vue';
 
 // const EditorEmendaPreview = defineAsyncComponent(
 //     () => import("./EditorEmendaPreview.vue")
@@ -73,6 +73,6 @@ const props = defineProps<Props>();
 const itensMenu = computed(() => props.itensMenu);
 const comandoEmenda = computed(() => props.comandoEmenda);
 
-onMounted(() => document.getElementById('ajuda-tab')?.click());
+// onMounted(() => document.getElementById('ajuda-tab')?.click());
 
 </script>
