@@ -173,7 +173,12 @@ import '../../assets/js/lexml-eta/index.min.js';
 
 import lexmlJsonixService from '../../servicos/lexmlJsonixService';
 import proposicaoService from "../..//servicos/proposicaoService";
-import { ref, onMounted, defineAsyncComponent } from 'vue';
+import {
+    ref,
+    onMounted,
+    onUpdated,
+    defineAsyncComponent
+} from 'vue';
 import { Proposicao } from "../../model";
 
 const AcoesPermitidas = defineAsyncComponent(
@@ -213,9 +218,14 @@ const emenda = ref<object | undefined | null>(null);
 const comandoEmenda = ref();
 
 onMounted(() => {
-    emenda.value = props.emenda;
     buscarProposicao(props.sigla, props.numero, props.ano);
     buscarLexmlJsonixProposicao(props.sigla, props.numero, props.ano);
+});
+
+onUpdated(() => {
+    if (props.emenda !== {} && !emenda.value) {
+        emenda.value = props.emenda;
+    }
 });
 
 function buscarProposicao(sigla: string, numero: string, ano: number) {
