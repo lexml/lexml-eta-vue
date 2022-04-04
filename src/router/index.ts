@@ -10,7 +10,7 @@ const routes: Array<RouteRecordRaw> = [
         // which is lazy-loaded when the route is visited.
         component: () =>
             import(
-                /* webpackChunkName: "dashboard" */ "../views/dashboardClean/DashboardView.vue"
+                /* webpackChunkName: "dashboard" */ "../views/dashboard/DashboardView.vue"
             ),
     },
     {
