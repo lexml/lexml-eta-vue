@@ -47,9 +47,21 @@ export interface RootState {
 }
 export interface DashBoardState {
     cardAtivo: DadosCard;
+
+    proposicoesRecentes: Proposicao[];
+    minhasEmendas: [];
+    parametrosPesquisaProposicao: IParametrosPesquisaProposicao;
 }
 
 export interface Emenda {
     titulo: string;
     proposicao: Proposicao;
+    projetoNorma?: any;
+    emendaLexml?: any;
+}
+
+export interface IParametrosPesquisaProposicao {
+    sigla?: string;
+    numero?: string;
+    ano?: number;
 }

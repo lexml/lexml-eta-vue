@@ -45,9 +45,7 @@
                     Pesquisar
                 </button>
                 ou
-                <acoes-permitidas
-                    :acoes-permitidas="['abrir']"
-                />
+                <acoes-permitidas :acoes-permitidas="['abrir']" />
             </div>
         </div>
     </div>
@@ -82,15 +80,10 @@ const { dados } = toRefs(props);
 
 const isDisabled = computed(() => !dados.value?.sigla || !dados.value?.ano);
 
-function emitirEventoCardClick(evt: Event) {
-    evt.target?.dispatchEvent(new CustomEvent('card-click', {
-        bubbles: true,
-        detail: {
-            tipo: 'Parametrizada',
-            titulo: 'Teste',
-            parametros: dados.value,
-        },
-    }));
+const emit = defineEmits(['pesquisar']);
+
+function emitirEventoCardClick() {
+    emit('pesquisar', { ...dados.value });
 }
 </script>
 

@@ -1,6 +1,8 @@
 <template>
     <header-area />
-    <router-view />
+    <div class="bs-eta">
+        <router-view />
+    </div>
     <footer-area v-if="false" />
     <icones-svg />
 </template>
@@ -16,32 +18,8 @@ const FooterArea = defineAsyncComponent(
 const IconesSvg = defineAsyncComponent(
     () => import("./components/comuns/IconesSvg.vue")
 );
-
 </script>
-
-<style lang="scss" src="./assets/css/main.css">
-// body {
-//     box-sizing: border-box;
-// }
-
-// #app {
-//     font-family: Avenir, Helvetica, Arial, sans-serif;
-//     -webkit-font-smoothing: antialiased;
-//     -moz-osx-font-smoothing: grayscale;
-//     text-align: center;
-//     color: #2c3e50;
-// }
-
-// nav {
-//     padding: 30px;
-
-//     a {
-//         font-weight: bold;
-//         color: #2c3e50;
-
-//         &.router-link-exact-active {
-//             color: #42b983;
-//         }
-//     }
-// }
+<style lang="scss">
+@import "./assets/css/main.css";
+@import "./assets/css/bs-eta.css";
 </style>

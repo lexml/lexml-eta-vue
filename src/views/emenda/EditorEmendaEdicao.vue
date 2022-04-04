@@ -24,13 +24,7 @@
                     class="collapse navbar-collapse proposicao-actions"
                     id="navbarSupportedContent"
                 >
-                    <acoes-permitidas
-                        v-if="proposicao && emenda && projetoNorma"
-                        :item="proposicao"
-                        :emenda="emenda"
-                        :projetoNorma="projetoNorma"
-                        :acoes-permitidas="['salvar']"
-                    />
+                    <acoes-permitidas v-if="emenda" :item="emenda" :acoes-permitidas="['salvar']" />
                     <!-- <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <button type="button" class="btn btn-labeled proposicao-action">
@@ -82,16 +76,18 @@
                 <div class="row">
                     <section class="col-md-7 col-sm-12">
                         <input
+                            v-if="emenda"
                             type="input"
                             class="form-control"
                             placeholder="Título da emenda"
                             aria-label="Título da emenda"
                             required
+                            v-model="emenda.titulo"
                         />
                         <card-proposicao
                             class="editar-emenda-dados"
-                            v-if="proposicao"
-                            :proposicao="proposicao"
+                            v-if="emenda"
+                            :proposicao="emenda.proposicao"
                         />
 
                         <!-- BOTÕES QUE ATIVAM AS MODAIS -->
@@ -117,8 +113,8 @@
                             v-show="!loading"
                             ref="lexmlEta"
                             modo="emenda"
-                            :projetoNorma="projetoNorma"
-                            :emenda="emenda"
+                            :projetoNorma="emenda?.projetoNorma || {}"
+                            :emenda="emenda?.emendaLexml || {}"
                             @onchange="onChange"
                         />
                     </section>
@@ -126,7 +122,7 @@
                         <editor-emenda-painel-lateral
                             :itens-menu="itensMenu"
                             :texto-rotulo-dispositivo="textoRotuloDispositivo"
-                            :comando-emenda="comandoEmenda"
+                            :comando-emenda="emenda?.emendaLexml?.comandoEmenda"
                         />
                     </aside>
                 </div>
@@ -136,7 +132,7 @@
         <editor-emenda-painel-modal
             :itens-menu="itensMenu"
             :texto-rotulo-dispositivo="textoRotuloDispositivo"
-            :emenda="comandoEmenda"
+            :comando-emenda="emenda?.emendaLexml?.comandoEmenda"
         />
     </div>
 </template>
@@ -168,7 +164,6 @@ lexml-eta-articulacao {
 
 <script setup lang="ts">
 // import "@lexml/lexml-eta";
-// import "@lexml/lexml-eta/dist/assets/css/editor.css";
 import '../../assets/js/lexml-eta/index.min.js';
 
 import lexmlJsonixService from '../../servicos/lexmlJsonixService';
@@ -176,10 +171,9 @@ import proposicaoService from "../..//servicos/proposicaoService";
 import {
     ref,
     onMounted,
-    onUpdated,
     defineAsyncComponent
 } from 'vue';
-import { Proposicao } from "../../model";
+import { Emenda } from "../../model";
 
 const AcoesPermitidas = defineAsyncComponent(
     () => import("../../components/comuns/AcoesPermitidas.vue")
@@ -197,54 +191,44 @@ const EditorEmendaPainelModal = defineAsyncComponent(
     () => import("./EditorEmendaPainelModal.vue")
 );
 
-// import { Proposicao } from '../../model';
 interface Props {
     sigla: string;
     numero: string;
     ano: number;
-    emenda?: object;
+    emendaLexml?: object;
+    titulo?: string;
 }
+
 const props = defineProps<Props>();
-const projetoNorma = ref(null);
 const loading = ref(true);
 
 const root = ref<HTMLElement>();
-const proposicao = ref<Proposicao>();
 const itensMenu = ref<string[]>([]);
 const textoRotuloDispositivo = ref('');
 const lexmlEta = ref();
 
-const emenda = ref<object | undefined | null>(null);
-const comandoEmenda = ref();
+const emenda = ref<Emenda>();
 
-onMounted(() => {
-    buscarProposicao(props.sigla, props.numero, props.ano);
-    buscarLexmlJsonixProposicao(props.sigla, props.numero, props.ano);
+onMounted(async () => {
+    loading.value = true;
+    Promise.all([
+        proposicaoService.buscarProposicao(props.sigla, props.numero, props.ano),
+        lexmlJsonixService.buscarTextoLexmlAsJson(props.sigla, props.numero, props.ano)
+    ]).then((results) => {
+        emenda.value = {
+            proposicao: results[0],
+            projetoNorma: results[1],
+            titulo: props.titulo || '',
+            emendaLexml: props.emendaLexml !== {} && !emenda.value ? props.emendaLexml : undefined,
+        };
+        simularClick();
+    }).finally(() => loading.value = false);
 });
-
-onUpdated(() => {
-    if (props.emenda !== {} && !emenda.value) {
-        emenda.value = props.emenda;
-    }
-});
-
-function buscarProposicao(sigla: string, numero: string, ano: number) {
-    proposicaoService
-        .buscarProposicao(sigla, numero, ano)
-        .then((res) => proposicao.value = res);
-}
-
-function buscarLexmlJsonixProposicao(sigla: string, numero: string, ano: number) {
-    lexmlJsonixService
-        .buscarTextoLexmlAsJson(sigla, numero, ano)
-        .then((jsonix): void => projetoNorma.value = jsonix)
-        .then(() => simularClick())
-        .finally(() => loading.value = false);
-}
 
 function onChange() {
-    emenda.value = lexmlEta.value.getEmenda();
-    comandoEmenda.value = lexmlEta.value.getComandoEmenda();
+    if (emenda.value) {
+        emenda.value.emendaLexml = lexmlEta.value.getEmenda();
+    }
 }
 
 let timer = 0;

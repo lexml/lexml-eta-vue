@@ -1,5 +1,6 @@
+import { IParametrosPesquisaProposicao } from "./../model/index";
 import { defineStore } from "pinia";
-import { DashBoardState, DadosCard } from "@/model";
+import { DashBoardState, DadosCard, Proposicao } from "@/model";
 
 export const useDashboardStore = defineStore({
     id: "dashboardStore",
@@ -17,11 +18,26 @@ export const useDashboardStore = defineStore({
                 pagina: 1,
             },
         },
+
+        proposicoesRecentes: [],
+        minhasEmendas: [],
+        parametrosPesquisaProposicao: {
+            sigla: "MPV",
+            ano: new Date().getFullYear(),
+        },
     }),
     getters: {},
     actions: {
         setDadosCardAtivo(dados: DadosCard) {
             this.cardAtivo = dados;
+        },
+        setProposicoesRecentes(proposicoes: Proposicao[]) {
+            this.proposicoesRecentes = proposicoes;
+        },
+        setParametrosPesquisaProposicao(
+            parametros: IParametrosPesquisaProposicao
+        ) {
+            this.parametrosPesquisaProposicao = parametros;
         },
     },
 });

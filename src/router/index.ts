@@ -1,8 +1,5 @@
-import {
-    createRouter,
-    createWebHashHistory,
-    RouteRecordRaw
-} from "vue-router";
+// eslint-disable-next-line es-beautifier/multiline-import-specifiers
+import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -13,7 +10,7 @@ const routes: Array<RouteRecordRaw> = [
         // which is lazy-loaded when the route is visited.
         component: () =>
             import(
-                /* webpackChunkName: "dashboard" */ "../views/dashboard/DashboardView.vue"
+                /* webpackChunkName: "dashboard" */ "../views/dashboardClean/DashboardView.vue"
             ),
     },
     {
@@ -22,6 +19,15 @@ const routes: Array<RouteRecordRaw> = [
         component: () =>
             import(
                 /* webpackChunkName: "editorEmenda" */ "../views/emenda/EditorEmendaView.vue"
+            ),
+        props: true,
+    },
+    {
+        path: "/pesquisa-proposicao",
+        name: "PesquisaProposicao",
+        component: () =>
+            import(
+                /* webpackChunkName: "editorEmenda" */ "../views/pesquisaProposicao/PesquisaProposicaoView.vue"
             ),
         props: true,
     },

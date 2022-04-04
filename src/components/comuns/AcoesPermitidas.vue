@@ -48,7 +48,6 @@
             style="display: none"
         />
 
-
         <!-- <button type="button" class="btn btn-labeled proposicao-action">
                     <span class="btn-label">
                         <svg class="bi proposicao-action-icon">
@@ -91,8 +90,6 @@ import { AcaoPermitida, Emenda, Proposicao } from "../../model";
 import { getProposicaoFromObjeto } from '../../utils/typeUtils';
 interface Props {
     item?: Proposicao | Emenda;
-    emenda?: object;
-    projetoNorma?: object | null;
     acoesPermitidas: Array<AcaoPermitida>;
 }
 const props = defineProps<Props>();
@@ -115,15 +112,18 @@ function emendar() {
 }
 
 function salvar() {
+    const emenda = props.item as Emenda;
     if (props.item) {
-        const { sigla, numero, ano } = getProposicaoFromObjeto(props.item);
+        const { sigla, numero, ano } = getProposicaoFromObjeto(emenda);
+        const { titulo } = emenda;
         const emendaJson = JSON.stringify({
-            'sigla': sigla,
-            'numero': numero,
-            'ano': ano,
-            'projetoNorma': props.projetoNorma,
-            'emenda': props.emenda || ""
-        });
+            titulo,
+            sigla,
+            numero,
+            ano,
+            projetoNorma: emenda.projetoNorma,
+            emenda: emenda.emendaLexml,
+        }, null, 4);
         const blob: Blob = new Blob([
             emendaJson
         ], {
@@ -163,7 +163,8 @@ function selecionaArquivo($event: Event) {
                         ano: result.ano
                     },
                     params: {
-                        emenda: JSON.stringify(result.emenda)
+                        emendaLexml: JSON.stringify(result.emenda),
+                        titulo: result.titulo,
                     }
                 });
             }

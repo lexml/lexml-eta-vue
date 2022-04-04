@@ -37,7 +37,6 @@
                 role="tabpanel"
                 aria-labelledby="visualizacao-tab"
             >
-                <!-- <editor-emenda-preview /> -->
                 <lexml-emenda-comando v-if="comandoEmenda" :emenda="comandoEmenda" />
             </div>
             <div
@@ -56,10 +55,6 @@
 <script setup lang="ts">
 import { defineAsyncComponent, computed } from 'vue';
 
-// const EditorEmendaPreview = defineAsyncComponent(
-//     () => import("./EditorEmendaPreview.vue")
-// );
-
 const EditorEmendaAjuda = defineAsyncComponent(
     () => import("./EditorEmendaAjuda.vue")
 );
@@ -67,12 +62,10 @@ const EditorEmendaAjuda = defineAsyncComponent(
 interface Props {
     itensMenu: string[];
     textoRotuloDispositivo: string;
-    comandoEmenda?: object;
+    comandoEmenda?: any;
 }
 const props = defineProps<Props>();
 const itensMenu = computed(() => props.itensMenu);
 const comandoEmenda = computed(() => props.comandoEmenda);
-
-// onMounted(() => document.getElementById('ajuda-tab')?.click());
 
 </script>

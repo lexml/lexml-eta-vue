@@ -4,7 +4,8 @@
             :sigla="sigla"
             :numero="numero"
             :ano="ano"
-            :emenda="JSON.parse(route.params.emenda as string || '{}')"
+            :emenda-lexml="JSON.parse(route.params.emendaLexml as string || '{}')"
+            :titulo="(route.params.titulo as string)"
         />
     </div>
 </template>

@@ -1,0 +1,20 @@
+{
+    "recommendations": [
+        "dbaeumer.vscode-eslint",
+        "DotJoshJohnson.xml",
+        "eamodio.gitlens",
+        "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
+        "formulahendry.auto-close-tag",
+        "formulahendry.auto-rename-tag",
+        "formulahendry.code-runner",
+        "Gruntfuggly.todo-tree",
+        "johnsoncodehk.volar",
+        "MisterJ.vue-volar-extention-pack",
+        "ms-vscode.vscode-typescript-tslint-plugin",
+        "runem.lit-plugin",
+        "sdras.vue-vscode-snippets",
+        "steoates.autoimport",
+        "wix.vscode-import-cost"
+    ]
+}

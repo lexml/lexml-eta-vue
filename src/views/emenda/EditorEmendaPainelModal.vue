@@ -5,7 +5,7 @@
                 Visualização
             </template>
             <template #corpo>
-                <lexml-emenda-comando v-if="emenda" :emenda="emenda" />
+                <lexml-emenda-comando v-if="comandoEmenda" :emenda="comandoEmenda" />
             </template>
         </painel-modal>
 
@@ -37,15 +37,14 @@ const EditorEmendaAjuda = defineAsyncComponent(
 interface Props {
     itensMenu: string[];
     textoRotuloDispositivo: string;
-    emenda?: object;
+    comandoEmenda?: object;
 }
 
 const props = defineProps<Props>();
 const itensMenu = computed(() => props.itensMenu);
-const emenda = computed(() => props.emenda);
+const comandoEmenda = computed(() => props.comandoEmenda);
 
 </script>
 
 <style scoped>
-
 </style>
