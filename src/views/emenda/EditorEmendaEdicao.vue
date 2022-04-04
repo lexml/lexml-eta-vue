@@ -114,7 +114,6 @@
                             ref="lexmlEta"
                             modo="emenda"
                             :projetoNorma="emenda?.projetoNorma || {}"
-                            :emenda="emenda?.emendaLexml || {}"
                             @onchange="onChange"
                         />
                     </section>
@@ -221,6 +220,7 @@ onMounted(async () => {
             titulo: props.titulo || '',
             emendaLexml: props.emendaLexml !== {} && !emenda.value ? props.emendaLexml : undefined,
         };
+        lexmlEta.value.emenda = emenda.value.emendaLexml;
         simularClick();
     }).finally(() => loading.value = false);
 });
