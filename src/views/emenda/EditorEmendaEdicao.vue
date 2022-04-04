@@ -221,7 +221,6 @@ onMounted(async () => {
             emendaLexml: props.emendaLexml !== {} && !emenda.value ? props.emendaLexml : undefined,
         };
         lexmlEta.value.emenda = emenda.value.emendaLexml;
-        simularClick();
     }).finally(() => loading.value = false);
 });
 
@@ -241,13 +240,6 @@ function atualizarMenu() {
 
         textoRotuloDispositivo.value = document.querySelector('.lx-eta-dropdown')?.closest('.container__menu')?.previousElementSibling?.querySelector('label')?.getAttribute('data-rotulo') ?? '';
         // textoRotuloDispositivo.value = textoRotuloDispositivo.value.replace(' –', '');
-    }, 300);
-}
-
-function simularClick() {
-    const el = document.querySelector('lexml-eta');
-    setTimeout(() => {
-        el ? (el as HTMLElement).click() : simularClick();
     }, 300);
 }
 </script>
