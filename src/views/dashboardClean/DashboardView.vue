@@ -24,7 +24,9 @@
                             aria-selected="true"
                         >
                             Minhas emendas
-                            <span class="badge bg-secondary">5</span>
+                            <span
+                                class="badge bg-secondary"
+                            >{{ minhasEmendas.length }}</span>
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -71,7 +73,7 @@
                     <div class="col-lg-4 offset-lg-2 col-md-6">
                         <h5>
                             Minhas emendas
-                            <span class="badge bg-primary">5</span>
+                            <span class="badge bg-primary">{{ minhasEmendas.length }}</span>
                         </h5>
                         <dashboard-card-minhas-emendas :emendas="minhasEmendas" />
                     </div>
@@ -97,6 +99,7 @@ import {
     ordenarProposicoesMaisRecentePrimeiro
 } from "../../utils/proposicoes";
 import proposicaoService from '../../servicos/proposicaoService';
+import { useAppStore } from "../../stores/appStore";
 
 const ParametrosPesquisaProposicao = defineAsyncComponent(
     () => import("../../components/comuns/ParametrosPesquisaProposicao.vue")
@@ -113,8 +116,9 @@ const proposicoesRecentes = ref<Proposicao[]>([]);
 const minhasEmendas = ref<Emenda[]>([]);
 const _parametrosPesquisaProposicao = ref<IParametrosPesquisaProposicao>({
     sigla: 'MPV',
-    ano: new Date().getFullYear(),
 });
+
+const appStore = useAppStore();
 
 onMounted(() => {
     loading.value = true;
@@ -122,6 +126,8 @@ onMounted(() => {
         .then((resProposicoes) => {
             proposicoesRecentes.value = ordenarProposicoesMaisRecentePrimeiro(resProposicoes);
         }).finally(() => loading.value = false);
+
+    minhasEmendas.value = appStore.lerEmendas();
 
     if (window.history.state.parametrosPesquisaProposicao) {
         _parametrosPesquisaProposicao.value = window.history.state.parametrosPesquisaProposicao;

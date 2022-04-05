@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent } from "vue";
-import { Emenda } from "@/model";
+import { Emenda, EmendaEmDisco } from "@/model";
 import { abrirEmenda } from "../../utils/acoes";
 import { useRouter } from "vue-router";
 
@@ -53,8 +53,8 @@ function _abrirEmenda(ev: Event, emenda: Emenda) {
     const el = ev.target as HTMLElement;
 
     // Checa se o click foi no "corpo" da proposição
-    if (el.classList.contains('list-group-item-action')) {
-        abrirEmenda(emenda, undefined, router);
+    if (!el.classList.contains('context-menu')) {
+        abrirEmenda(emenda as EmendaEmDisco, router);
     }
 }
 </script>

@@ -9,6 +9,8 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent } from "vue";
+import { useAppStore } from './stores/appStore';
+
 const HeaderArea = defineAsyncComponent(
     () => import("./components/layout/HeaderArea.vue")
 );
@@ -18,6 +20,9 @@ const FooterArea = defineAsyncComponent(
 const IconesSvg = defineAsyncComponent(
     () => import("./components/comuns/IconesSvg.vue")
 );
+
+const appStore = useAppStore();
+appStore.lerEmendas();
 </script>
 <style lang="scss">
 @import "./assets/css/main.css";
