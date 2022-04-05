@@ -1,4 +1,4 @@
-import { Emenda, Proposicao } from "./../model/index";
+import { Emenda, EmendaEmDisco, Proposicao } from "./../model/index";
 import { getProposicaoFromObjeto } from "./typeUtils";
 import { Router } from "vue-router";
 
@@ -19,23 +19,22 @@ export const criarEmenda = (
     }
 };
 
-export const abrirEmenda = (
-    item: Emenda | Proposicao,
-    payload: any,
-    router: Router
-): void => {
-    if (item) {
-        const { sigla, numero, ano } = getProposicaoFromObjeto(item);
+// abre emenda da store
+export const abrirEmenda = (emenda: EmendaEmDisco, router: Router): void => {
+    if (emenda) {
+        const { sigla, numero, ano } = emenda.proposicao;
+        emenda.datAlteracao = new Date();
+        emenda.datUltimoAcesso = new Date();
         router.push({
-            path: "/edicao",
+            name: "edicao",
             query: {
                 sigla,
                 numero,
                 ano,
             },
             params: {
-                emendaLexml: JSON.stringify(payload),
-                titulo: payload.titulo,
+                emendaLexml: JSON.stringify(emenda.emendaLexml),
+                titulo: emenda.titulo,
             },
         });
     }

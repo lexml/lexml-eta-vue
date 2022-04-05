@@ -54,6 +54,7 @@ export interface DashBoardState {
 }
 
 export interface Emenda {
+    id?: string;
     titulo: string;
     proposicao: Proposicao;
     projetoNorma?: any;
@@ -64,4 +65,14 @@ export interface IParametrosPesquisaProposicao {
     sigla?: string;
     numero?: string;
     ano?: number;
+}
+
+export interface EmendaEmDisco extends Emenda {
+    path?: string;
+    datAlteracao: Date;
+    datUltimoAcesso: Date;
+}
+
+export interface AppState {
+    emendas: EmendaEmDisco[];
 }
