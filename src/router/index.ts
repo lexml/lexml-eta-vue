@@ -27,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
         name: "PesquisaProposicao",
         component: () =>
             import(
-                /* webpackChunkName: "editorEmenda" */ "../views/pesquisaProposicao/PesquisaProposicaoView.vue"
+                /* webpackChunkName: "pesquisaProposicao" */ "../views/pesquisaProposicao/PesquisaProposicaoView.vue"
             ),
         props: true,
     },
@@ -43,7 +43,7 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes,
     scrollBehavior(to, from, savedPosition) {
-        const promise = new Promise<ScrollPosition | false>((resolve) => {
+        return new Promise<ScrollPosition | false>((resolve) => {
             if (!savedPosition) {
                 resolve(false);
             } else {
@@ -77,8 +77,6 @@ const router = createRouter({
                 recursiveScrollToPosition();
             }
         });
-
-        return promise;
     },
 });
 
