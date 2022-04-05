@@ -86,8 +86,16 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { AcaoPermitida, Emenda, Proposicao } from "../../model";
+import {
+    AcaoPermitida,
+    Emenda,
+    EmendaEmDisco,
+    Proposicao
+} from "../../model";
 import { getProposicaoFromObjeto } from '../../utils/typeUtils';
+import { useAppStore } from '../../stores/appStore';
+import { generateUUID } from '../../utils/geral';
+
 interface Props {
     item?: Proposicao | Emenda;
     acoesPermitidas: Array<AcaoPermitida>;
@@ -96,6 +104,8 @@ const props = defineProps<Props>();
 const acoesPermitidas = ref(props.acoesPermitidas);
 
 const router = useRouter();
+
+const appStore = useAppStore();
 
 function emendar() {
     if (props.item) {
@@ -112,24 +122,20 @@ function emendar() {
 }
 
 function salvar() {
-    const emenda = props.item as Emenda;
+    const emenda = props.item as EmendaEmDisco;
+    emenda.id = emenda.id || generateUUID();
+    emenda.datAlteracao = new Date();
+    emenda.datUltimoAcesso = new Date();
+
     if (props.item) {
-        const { sigla, numero, ano } = getProposicaoFromObjeto(emenda);
-        const { titulo } = emenda;
-        const emendaJson = JSON.stringify({
-            titulo,
-            sigla,
-            numero,
-            ano,
-            projetoNorma: emenda.projetoNorma,
-            emenda: emenda.emendaLexml,
-        }, null, 4);
+        const emendaJson = JSON.stringify(emenda, null, 4);
         const blob: Blob = new Blob([
             emendaJson
         ], {
             type: 'application/json'
         });
-        const fileName = `${sigla} ${numero}/${ano}.json`;
+        const { sigla, numero, ano } = emenda.proposicao;
+        const fileName = `${sigla} ${numero}/${ano}.emenda.json`;
         const objectUrl: string = URL.createObjectURL(blob);
         const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
 
@@ -137,6 +143,9 @@ function salvar() {
         a.download = fileName;
         document.body.appendChild(a);
         a.click();
+
+        appStore.adicionarEmenda(emenda);
+        // TODO: remover elemento
     }
 }
 
@@ -154,19 +163,26 @@ function selecionaArquivo($event: Event) {
         fReader.readAsText(fileInput.files[0]);
         fReader.onloadend = (e) => {
             if (e.target?.result) {
-                const result = JSON.parse(e.target.result as string);
+                const obj = JSON.parse(e.target.result as string);
+                const result: EmendaEmDisco = {
+                    ...obj,
+                    datAlteracao: new Date(obj.datAlteracao),
+                    datUltimoAcesso: new Date(),
+                };
                 router.push({
                     name: 'edicao',
                     query: {
-                        sigla: result.sigla,
-                        numero: result.numero,
-                        ano: result.ano
+                        sigla: result.proposicao.sigla,
+                        numero: result.proposicao.numero,
+                        ano: result.proposicao.ano
                     },
                     params: {
-                        emendaLexml: JSON.stringify(result.emenda),
+                        emendaLexml: JSON.stringify(result.emendaLexml),
                         titulo: result.titulo,
                     }
                 });
+
+                appStore.adicionarEmenda(result);
             }
         };
     }

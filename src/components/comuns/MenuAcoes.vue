@@ -14,13 +14,13 @@
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <template v-if="props.minhaEmenda">
                 <li>
-                    <a class="dropdown-item" href="#">Editar</a>
+                    <a class="dropdown-item" href="#" @click.prevent="_abrirEmenda()">Editar</a>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="#">Excluir</a>
+                    <a class="dropdown-item disabled" href="#">Excluir</a>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="#">Encaminhar</a>
+                    <a class="dropdown-item disabled" href="#">Encaminhar</a>
                 </li>
                 <li>
                     <hr class="dropdown-divider" />
@@ -38,25 +38,29 @@
                 <a class="dropdown-item ps-4" href="#" @click.prevent="_criarEmenda()">Padrão</a>
             </li>
             <li>
-                <a class="dropdown-item ps-4" href="#">Onde couber</a>
+                <a
+                    class="dropdown-item ps-4 disabled"
+                    href="#"
+                    @click.prevent="_criarEmendaOndeCouber()"
+                >Onde couber</a>
             </li>
             <li>
-                <a class="dropdown-item ps-4" href="#">Substitutivo</a>
+                <a class="dropdown-item ps-4 disabled" href="#">Substitutivo</a>
             </li>
             <li>
                 <hr class="dropdown-divider" />
             </li>
             <li>
-                <a class="dropdown-item" href="#">Quadro de emendas</a>
+                <a class="dropdown-item disabled" href="#">Quadro de emendas</a>
             </li>
         </ul>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Proposicao, Emenda } from '@/model';
+import { Proposicao, Emenda, EmendaEmDisco } from '@/model';
 import { useRouter } from 'vue-router';
-import { criarEmenda } from '../../utils/acoes';
+import { criarEmenda, abrirEmenda } from '../../utils/acoes';
 
 interface Props {
     minhaEmenda?: boolean;
@@ -68,6 +72,14 @@ const router = useRouter();
 
 function _criarEmenda() {
     criarEmenda(props.item, router);
+}
+
+function _abrirEmenda() {
+    abrirEmenda(props.item as EmendaEmDisco, router);
+}
+
+function _criarEmendaOndeCouber() {
+    console.log(11111, "teste");
 }
 </script>
 
