@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
+        "start": "npm run serve",
         "serve": "vite --port 3000",
         "build": "rimraf dist && vue-tsc --noEmit && vite build",
         "build:ghpages": "rimraf dist && vue-tsc --noEmit && vite build --base=/lexml-eta-vue/",
