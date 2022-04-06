@@ -26,7 +26,6 @@
 import { defineAsyncComponent } from "vue";
 import { Proposicao } from "@/model";
 import { criarEmenda } from "../../utils/acoes";
-import { useRouter } from "vue-router";
 import { isPrazoAbertoFake } from "../../utils/proposicoes";
 
 const MenuAcoes = defineAsyncComponent(
@@ -39,14 +38,12 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const router = useRouter();
-
 function _criarEmenda(ev: Event, proposicao: Proposicao) {
     const el = ev.target as HTMLElement;
 
     // Checa se o click foi no "corpo" da proposição
     if (!el.classList.contains('context-menu')) {
-        criarEmenda(proposicao, router);
+        criarEmenda(proposicao);
     }
 }
 </script>
