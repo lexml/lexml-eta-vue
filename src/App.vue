@@ -9,7 +9,11 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent } from "vue";
+import { useRouter } from "vue-router";
 import { useAppStore } from './stores/appStore';
+import acoes from './utils/acoes';
+
+acoes.configModulo(useRouter());
 
 const HeaderArea = defineAsyncComponent(
     () => import("./components/layout/HeaderArea.vue")

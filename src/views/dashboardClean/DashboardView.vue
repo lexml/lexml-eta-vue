@@ -26,7 +26,7 @@
                             Minhas emendas
                             <span
                                 class="badge bg-secondary"
-                            >{{ minhasEmendas.length }}</span>
+                            >{{ appStore.emendas.length }}</span>
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -54,7 +54,7 @@
                         role="tabpanel"
                         aria-labelledby="minhas-emendas-tab"
                     >
-                        <dashboard-card-minhas-emendas :emendas="minhasEmendas" />
+                        <dashboard-card-minhas-emendas :emendas="appStore.emendas" />
                     </div>
                     <div
                         class="tab-pane fade"
@@ -73,9 +73,11 @@
                     <div class="col-lg-4 offset-lg-2 col-md-6">
                         <h5>
                             Minhas emendas
-                            <span class="badge bg-primary">{{ minhasEmendas.length }}</span>
+                            <span
+                                class="badge bg-primary"
+                            >{{ appStore.emendas.length }}</span>
                         </h5>
-                        <dashboard-card-minhas-emendas :emendas="minhasEmendas" />
+                        <dashboard-card-minhas-emendas :emendas="appStore.emendas" />
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <h5>
@@ -94,7 +96,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, ref, onMounted } from "vue";
-import { Emenda, Proposicao, IParametrosPesquisaProposicao } from "@/model";
+import { Proposicao, IParametrosPesquisaProposicao } from "@/model";
 import {
     ordenarProposicoesMaisRecentePrimeiro
 } from "../../utils/proposicoes";
@@ -113,7 +115,6 @@ const ListaProposicoes = defineAsyncComponent(
 
 const loading = ref(false);
 const proposicoesRecentes = ref<Proposicao[]>([]);
-const minhasEmendas = ref<Emenda[]>([]);
 const _parametrosPesquisaProposicao = ref<IParametrosPesquisaProposicao>({
     sigla: 'MPV',
 });
@@ -126,8 +127,6 @@ onMounted(() => {
         .then((resProposicoes) => {
             proposicoesRecentes.value = ordenarProposicoesMaisRecentePrimeiro(resProposicoes);
         }).finally(() => loading.value = false);
-
-    minhasEmendas.value = appStore.lerEmendas();
 
     if (window.history.state.parametrosPesquisaProposicao) {
         _parametrosPesquisaProposicao.value = window.history.state.parametrosPesquisaProposicao;

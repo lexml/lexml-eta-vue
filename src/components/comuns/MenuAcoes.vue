@@ -14,10 +14,15 @@
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <template v-if="props.minhaEmenda">
                 <li>
-                    <a class="dropdown-item" href="#" @click.prevent="_abrirEmenda()">Editar</a>
+                    <a class="dropdown-item" href="#" @click.prevent.stop="_abrirEmenda">Editar</a>
                 </li>
                 <li>
-                    <a class="dropdown-item disabled" href="#">Excluir</a>
+                    <!-- <a class="dropdown-item disabled" href="#">Excluir</a> -->
+                    <a
+                        class="dropdown-item"
+                        href="#"
+                        @click.prevent.stop="_removerDaLista"
+                    >Remover da lista</a>
                 </li>
                 <li>
                     <a class="dropdown-item disabled" href="#">Encaminhar</a>
@@ -35,14 +40,18 @@
                 </li>
             </template>
             <li>
-                <a class="dropdown-item ps-4" href="#" @click.prevent="_criarEmenda()">Padrão</a>
+                <a
+                    class="dropdown-item ps-4"
+                    href="#"
+                    @click.prevent.stop="criarEmenda(props.item);"
+                >Padrão</a>
             </li>
             <li>
                 <a
-                    class="dropdown-item ps-4 disabled"
+                    class="dropdown-item ps-4"
                     href="#"
-                    @click.prevent="_criarEmendaOndeCouber()"
-                >Onde couber</a>
+                    @click.prevent.stop="criarEmenda(props.item, true);"
+                >Artigo "Onde couber"</a>
             </li>
             <li>
                 <a class="dropdown-item ps-4 disabled" href="#">Substitutivo</a>
@@ -58,9 +67,9 @@
 </template>
 
 <script setup lang="ts">
-import { Proposicao, Emenda, EmendaEmDisco } from '@/model';
-import { useRouter } from 'vue-router';
+import { Proposicao, Emenda, EmendaEmDisco } from '../../model';
 import { criarEmenda, abrirEmenda } from '../../utils/acoes';
+import { useAppStore } from '../../stores/appStore';
 
 interface Props {
     minhaEmenda?: boolean;
@@ -68,18 +77,13 @@ interface Props {
 }
 const props = defineProps<Props>();
 
-const router = useRouter();
-
-function _criarEmenda() {
-    criarEmenda(props.item, router);
-}
-
 function _abrirEmenda() {
-    abrirEmenda(props.item as EmendaEmDisco, router);
+    abrirEmenda(props.item as EmendaEmDisco);
 }
 
-function _criarEmendaOndeCouber() {
-    console.log(11111, "teste");
+const appStore = useAppStore();
+function _removerDaLista() {
+    appStore.removerDaLista(props.item as Emenda);
 }
 </script>
 

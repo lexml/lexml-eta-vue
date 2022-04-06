@@ -112,7 +112,7 @@
                         <lexml-eta
                             v-show="!loading"
                             ref="lexmlEta"
-                            modo="emenda"
+                            :modo="modoEmenda"
                             :projetoNorma="emenda?.projetoNorma || {}"
                             @onchange="onChange"
                         />
@@ -196,6 +196,7 @@ interface Props {
     ano: number;
     emendaLexml?: object;
     titulo?: string;
+    ondeCouber?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -207,6 +208,7 @@ const textoRotuloDispositivo = ref('');
 const lexmlEta = ref();
 
 const emenda = ref<Emenda>();
+const modoEmenda = ref('emenda');
 
 onMounted(async () => {
     loading.value = true;
@@ -220,6 +222,7 @@ onMounted(async () => {
             titulo: props.titulo || '',
             emendaLexml: props.emendaLexml !== {} && !emenda.value ? props.emendaLexml : undefined,
         };
+        modoEmenda.value = emenda.value.emendaLexml?.classificacao || (props.ondeCouber ? 'emendaArtigoOndeCouber' : 'emenda');
         lexmlEta.value.emenda = emenda.value.emendaLexml;
     }).finally(() => loading.value = false);
 });

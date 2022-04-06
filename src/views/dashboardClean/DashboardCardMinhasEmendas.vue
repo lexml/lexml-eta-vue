@@ -32,7 +32,6 @@
 import { defineAsyncComponent } from "vue";
 import { Emenda, EmendaEmDisco } from "@/model";
 import { abrirEmenda } from "../../utils/acoes";
-import { useRouter } from "vue-router";
 
 const MenuAcoes = defineAsyncComponent(
     () => import("../../components/comuns/MenuAcoes.vue")
@@ -47,14 +46,12 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const router = useRouter();
-
 function _abrirEmenda(ev: Event, emenda: Emenda) {
     const el = ev.target as HTMLElement;
 
     // Checa se o click foi no "corpo" da proposição
     if (!el.classList.contains('context-menu')) {
-        abrirEmenda(emenda as EmendaEmDisco, router);
+        abrirEmenda(emenda as EmendaEmDisco);
     }
 }
 </script>

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { AppState, EmendaEmDisco } from "@/model";
+import { AppState, Emenda, EmendaEmDisco } from "@/model";
 
 const ordernarEmendas = (_emendas: EmendaEmDisco[]): EmendaEmDisco[] => {
     const emendas = [..._emendas];
@@ -10,6 +10,11 @@ const ordernarEmendas = (_emendas: EmendaEmDisco[]): EmendaEmDisco[] => {
     });
     return emendas;
 };
+
+const salvarEmendasNoLocalStorage = (_emendas: EmendaEmDisco[]): void => {
+    window.localStorage.setItem("emendas", JSON.stringify(_emendas));
+};
+
 export const useAppStore = defineStore({
     id: "appStore",
     state: (): AppState => ({
@@ -33,16 +38,17 @@ export const useAppStore = defineStore({
             }
 
             this.emendas = ordernarEmendas(this.emendas);
-            window.localStorage.setItem(
-                "emendas",
-                JSON.stringify(this.emendas)
-            );
+            salvarEmendasNoLocalStorage(this.emendas);
         },
         lerEmendas(): EmendaEmDisco[] {
             this.emendas = JSON.parse(
                 window.localStorage.getItem("emendas") || "[]"
             );
             return this.emendas;
+        },
+        removerDaLista(_emenda: Emenda) {
+            this.emendas = this.emendas.filter((e) => e.id !== _emenda.id);
+            salvarEmendasNoLocalStorage(this.emendas);
         },
     },
 });
