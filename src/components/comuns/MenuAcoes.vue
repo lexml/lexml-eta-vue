@@ -24,18 +24,18 @@
                         @click.prevent.stop="_removerDaLista"
                     >Remover da lista</a>
                 </li>
-                <li>
+                <li @click.prevent.stop>
                     <a class="dropdown-item disabled" href="#">Encaminhar</a>
                 </li>
                 <li>
                     <hr class="dropdown-divider" />
                 </li>
-                <li>
+                <li @click.prevent.stop>
                     <a class="dropdown-item disabled" href="#">Nova emenda</a>
                 </li>
             </template>
             <template v-else>
-                <li>
+                <li @click.prevent.stop>
                     <a class="dropdown-item disabled" href="#">Criar emenda</a>
                 </li>
             </template>
@@ -53,13 +53,13 @@
                     @click.prevent.stop="criarEmenda(props.item, true);"
                 >Artigo "Onde couber"</a>
             </li>
-            <li>
+            <li @click.prevent.stop>
                 <a class="dropdown-item ps-4 disabled" href="#">Substitutivo</a>
             </li>
             <li>
                 <hr class="dropdown-divider" />
             </li>
-            <li>
+            <li @click.prevent.stop>
                 <a class="dropdown-item disabled" href="#">Quadro de emendas</a>
             </li>
         </ul>
