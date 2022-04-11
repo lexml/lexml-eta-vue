@@ -6,6 +6,7 @@
                     {{ dados.titulo }}
                 </h3>
                 <span class="badge rounded-pill bg-primary">{{ dados.totalItens }}</span>
+                <slot />
             </div>
         </div>
         <div class="row justify-content-center">
@@ -13,12 +14,12 @@
                 <ul class="lista-proposicao mb-5">
                     <li
                         v-for="(item, index) in dados.lista"
-                        :key="index"
+                        :key="getKey(item, index)"
                         class="lista-proposicao-item"
                     >
                         <dashboard-resultado-pesquisa-item
                             :item="item"
-                            :acoes-permitidas="['emendar']"
+                            :acoes-permitidas="getAcoesPermitidas(item)"
                         />
                     </li>
                 </ul>
@@ -29,7 +30,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent } from "vue";
-import { Proposicao, Emenda } from "../../model";
+import { Proposicao, Emenda, AcaoPermitida } from "../../model";
 
 const DashboardResultadoPesquisaItem = defineAsyncComponent(
     () => import("./DashboardResultadoPesquisaItem.vue")
@@ -49,6 +50,22 @@ interface Props {
     dados?: Dados;
 }
 defineProps<Props>();
+
+function getKey(item: Proposicao | Emenda, index: number) {
+    if ('idIdentificacao' in item) {
+        return (item as Proposicao).idIdentificacao + index;
+    } else {
+        return (item as Emenda).id;
+    }
+}
+
+function getAcoesPermitidas(item: Proposicao | Emenda): AcaoPermitida[] {
+    if ('idIdentificacao' in item) {
+        return ['criarEmendaPadrao', 'criarEmendaArtigoOndeCouber'];
+    } else {
+        return ['editar', 'excluir'];
+    }
+}
 </script>
 
 <style scoped src='../../assets/css/listaproposicao.css'>

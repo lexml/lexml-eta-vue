@@ -13,6 +13,7 @@
 import { defineAsyncComponent, ref, onMounted } from "vue";
 import { TipoCard } from "../../model";
 import { useRoute } from "vue-router";
+import { useAppStore } from "../../stores/appStore";
 
 const DashboardCardPesquisaPronta = defineAsyncComponent(
     () => import("./DashboardCardPesquisaPronta.vue")
@@ -32,10 +33,12 @@ interface Dados {
     tipo: TipoCard;
 }
 
+const appStore = useAppStore();
+
 const dadosMinhasEmendas = ref<Dados>({
     titulo: 'Minhas Emendas',
     subtitulo: 'Acesse as emendas que você está trabalhando',
-    totalItens: 5,
+    totalItens: appStore.emendas.length,
     icone: 'person-workspace',
     tipo: "MinhasEmendas",
 });

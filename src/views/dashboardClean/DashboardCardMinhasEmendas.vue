@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent } from "vue";
-import { Emenda, EmendaEmDisco } from "@/model";
+import { Emenda, EmendaEmDisco } from "../../model";
 import { abrirEmenda } from "../../utils/acoes";
 
 const MenuAcoes = defineAsyncComponent(

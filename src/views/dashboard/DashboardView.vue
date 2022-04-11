@@ -4,12 +4,21 @@
         <div v-if="loading" class="container">
             <span>Carregando...</span>
         </div>
-        <dashboard-resultado-pesquisa v-else :dados="dados" />
+        <dashboard-resultado-pesquisa v-else :dados="dados">
+            <div v-if="dados?.tipo === 'MinhasEmendas'">
+                <acoes-permitidas :acoes-permitidas="['abrir']" />
+            </div>
+        </dashboard-resultado-pesquisa>
     </div>
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, ref, watch } from "vue";
+import {
+    defineAsyncComponent,
+    ref,
+    watch,
+    onMounted
+} from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useDashboardStore } from "../../stores/dashboardStore";
 import {
@@ -20,12 +29,16 @@ import {
     Emenda
 } from "../../model";
 import proposicaoService from '../../servicos/proposicaoService';
+import { useAppStore } from "../../stores/appStore";
 
 const DashboardCards = defineAsyncComponent(
     () => import("./DashboardCards.vue")
 );
 const DashboardResultadoPesquisa = defineAsyncComponent(
     () => import("./DashboardResultadoPesquisa.vue")
+);
+const AcoesPermitidas = defineAsyncComponent(
+    () => import("../../components/comuns/AcoesPermitidas.vue")
 );
 
 let dados = ref<DadosCard>();
@@ -34,28 +47,35 @@ const route = useRoute();
 const router = useRouter();
 const loading = ref(false);
 
-watch(() => route.query, (query) => {
-    const params: ParametrosPesquisa = {
-        tipoPesquisa: query.tipoPesquisa as TipoCard || 'Parametrizada',
-        sigla: query.sigla?.toString() || 'MPV',
-        numero: query.numero?.toString(),
-        ano: Number(query.ano?.toString()) || new Date().getFullYear(),
-        pagina: Number(query.pagina?.toString()) || 1,
-    };
-
-    dashboardStore.setDadosCardAtivo({
-        tipo: params.tipoPesquisa as TipoCard,
-        titulo: params.tipoPesquisa || '',
-        totalItens: 0,
-        lista: [],
-        parametros: params
-    });
-
-    pesquisar(params);
+watch(() => route.query, () => {
+    pesquisarPorParametrosDaRota();
 }, {
-    immediate: true,
     deep: true,
 });
+
+onMounted(() => {
+    pesquisarPorParametrosDaRota();
+});
+
+function pesquisarPorParametrosDaRota() {
+    const { sigla, numero, ano, tipoPesquisa, pagina } = route.query;
+    pesquisar(sigla?.toString(), numero?.toString(), Number(ano?.toString()), tipoPesquisa?.toString() as TipoCard, Number(pagina?.toString()));
+}
+
+function pesquisar(sigla = 'MPV', numero?: string, ano?: number, tipoPesquisa: TipoCard = 'Parametrizada', pagina = 1) {
+    loading.value = true;
+    if (tipoPesquisa === 'MinhasEmendas') {
+        listarMinhasEmendas();
+    } else {
+        pesquisarProposicoes({
+            sigla,
+            numero,
+            ano: !ano || isNaN(ano) ? new Date().getFullYear() : ano,
+            tipoPesquisa,
+            pagina: isNaN(pagina) ? 1 : pagina
+        });
+    }
+}
 
 function atualizarRota(evt: CustomEvent) {
     let query = {
@@ -75,7 +95,20 @@ function atualizarRota(evt: CustomEvent) {
     });
 }
 
-function pesquisar(parametros: ParametrosPesquisa): void {
+const appStore = useAppStore();
+
+function listarMinhasEmendas() {
+    dados.value = {
+        tipo: 'MinhasEmendas',
+        titulo: 'Minhas Emendas',
+        totalItens: appStore.emendas.length,
+        lista: appStore.emendas,
+    };
+    dashboardStore.setDadosCardAtivo(dados.value);
+    loading.value = false;
+}
+
+function pesquisarProposicoes(parametros: ParametrosPesquisa) {
     const tempConfigPesquisa = {
         "MinhasEmendas": {
             sigla: 'MPV',
@@ -103,8 +136,6 @@ function pesquisar(parametros: ParametrosPesquisa): void {
         }
     };
 
-
-    loading.value = true;
     const chave = parametros.tipoPesquisa || 'Parametrizada';
     tempConfigPesquisa[chave].pagina = parametros.pagina;
     const params = tempConfigPesquisa[chave];
@@ -133,3 +164,5 @@ function convertToMinhasEmendas(proposicoes: Proposicao[]): Emenda[] {
     }));
 }
 </script>
+<style scoped src='../../assets/css/listaproposicao.css'>
+</style>

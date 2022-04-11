@@ -13,11 +13,14 @@ export interface Proposicao {
 
 export type AcaoPermitida =
     | "abrir"
-    | "emendar"
+    | "editar"
+    | "removerEmendaDaLista"
     | "excluir"
     | "salvar"
     | "compartilhar"
     | "autenticar"
+    | "criarEmendaPadrao"
+    | "criarEmendaArtigoOndeCouber"
     | "exibirQuadroEmendas";
 
 export type TipoCard =
@@ -39,7 +42,7 @@ export interface DadosCard {
     titulo: string;
     totalItens: number;
     lista: Proposicao[] | Emenda[];
-    parametros: ParametrosPesquisa;
+    parametros?: ParametrosPesquisa;
 }
 
 export interface RootState {
