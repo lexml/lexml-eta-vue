@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { AppState, Emenda, EmendaEmDisco } from "@/model";
+import { AppState, Emenda, EmendaEmDisco } from "../model";
 
 const ordernarEmendas = (_emendas: EmendaEmDisco[]): EmendaEmDisco[] => {
     const emendas = [..._emendas];

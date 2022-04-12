@@ -96,7 +96,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, ref, onMounted } from "vue";
-import { Proposicao, IParametrosPesquisaProposicao } from "@/model";
+import { Proposicao, IParametrosPesquisaProposicao } from "../../model";
 import {
     ordenarProposicoesMaisRecentePrimeiro
 } from "../../utils/proposicoes";

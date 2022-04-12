@@ -1,4 +1,4 @@
-import { Proposicao } from "@/model";
+import { Proposicao } from "../model";
 
 export const isPrazoAbertoFake = (
     proposicoes: Proposicao[],

@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent } from "vue";
-import { Proposicao } from "@/model";
+import { Proposicao } from "../../model";
 import { criarEmenda } from "../../utils/acoes";
 import { isPrazoAbertoFake } from "../../utils/proposicoes";
 

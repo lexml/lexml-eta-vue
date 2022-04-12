@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { Proposicao } from "@/model";
+import { Proposicao } from "../../model";
 import {
     defineAsyncComponent,
     ref,

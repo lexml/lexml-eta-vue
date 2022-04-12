@@ -1,6 +1,6 @@
 import { IParametrosPesquisaProposicao } from "./../model/index";
 import { defineStore } from "pinia";
-import { DashBoardState, DadosCard, Proposicao } from "@/model";
+import { DashBoardState, DadosCard, Proposicao } from "../model";
 
 export const useDashboardStore = defineStore({
     id: "dashboardStore",
