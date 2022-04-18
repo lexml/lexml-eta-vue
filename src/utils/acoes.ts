@@ -1,4 +1,4 @@
-import { Emenda, EmendaEmDisco, Proposicao } from "./../model/index";
+import { EmendaEmDisco, Proposicao } from "./../model/index";
 import { getProposicaoFromObjeto } from "./typeUtils";
 import { generateUUID } from "./geral";
 import { useAppStore } from "../stores/appStore";
@@ -10,7 +10,7 @@ export default {
   configModulo: (_router: Router) => (router = _router),
 };
 
-export const criarEmenda = (item: Emenda | Proposicao, ondeCouber?: boolean): void => {
+export const criarEmenda = (item: EmendaEmDisco | Proposicao, ondeCouber?: boolean): void => {
   if (item) {
     const { sigla, numero, ano } = getProposicaoFromObjeto(item);
     const query = {
@@ -28,17 +28,17 @@ export const criarEmenda = (item: Emenda | Proposicao, ondeCouber?: boolean): vo
   }
 };
 
-export const salvarEmenda = (_emenda: Emenda) => {
+export const salvarEmenda = (_emenda: EmendaEmDisco) => {
   const emenda = _emenda as EmendaEmDisco;
-  emenda.id = emenda.id || generateUUID();
-  emenda.datAlteracao = new Date();
-  emenda.datUltimoAcesso = new Date();
+  emenda.metadados.id = emenda.metadados.id || generateUUID();
+  emenda.metadados.datAlteracao = new Date();
+  emenda.metadados.datUltimoAcesso = new Date();
 
   const emendaJson = JSON.stringify(emenda, null, 4);
   const blob: Blob = new Blob([emendaJson], {
     type: "application/json",
   });
-  const { sigla, numero, ano } = emenda.proposicao;
+  const { sigla, numero, ano } = emenda.emenda.proposicao;
   const fileName = `${sigla} ${numero}/${ano}.emenda.json`;
   const objectUrl: string = URL.createObjectURL(blob);
   const a: HTMLAnchorElement = document.createElement("a");
@@ -52,25 +52,24 @@ export const salvarEmenda = (_emenda: Emenda) => {
 };
 
 // abre emenda da store
-export const abrirEmenda = (emenda: EmendaEmDisco): void => {
-  if (emenda) {
-    emenda.datAlteracao = new Date();
-    emenda.datUltimoAcesso = new Date();
-    const { sigla, numero, ano } = emenda.proposicao;
+export const abrirEmenda = (emendaEmDisco: EmendaEmDisco): void => {
+  if (emendaEmDisco) {
+    emendaEmDisco.metadados.datUltimoAcesso = new Date();
+    const { sigla, numero, ano } = emendaEmDisco.emenda.proposicao;
     const query = {
       sigla,
       numero,
       ano,
     };
-    if (emenda.tipo === "emendaArtigoOndeCouber") {
+    if (emendaEmDisco.emenda.tipo === "emendaArtigoOndeCouber") {
       (query as any).ondeCouber = true;
     }
     router.push({
       name: "edicao",
       query,
       params: {
-        emenda: JSON.stringify(emenda),
-        titulo: emenda.titulo,
+        emendaEmDisco: JSON.stringify(emendaEmDisco),
+        titulo: emendaEmDisco.metadados.titulo,
       },
     });
   }
@@ -92,30 +91,29 @@ export const selecionaArquivo = ($event: Event): void => {
     fReader.onloadend = (e) => {
       if (e.target?.result) {
         const obj = JSON.parse(e.target.result as string);
-        const emenda: EmendaEmDisco = {
-          ...obj,
-          datAlteracao: new Date(obj.datAlteracao),
-          datUltimoAcesso: new Date(),
-        };
-        const { sigla, numero, ano } = emenda.proposicao;
+        const emendaEmDisco: EmendaEmDisco = obj;
+        emendaEmDisco.metadados.datAlteracao = new Date(obj.datAlteracao);
+        emendaEmDisco.metadados.datUltimoAcesso = new Date();
+        const { sigla, numero, ano } = emendaEmDisco.emenda.proposicao;
         const query = {
           sigla,
           numero,
           ano,
         };
-        if (emenda.tipo === "emendaArtigoOndeCouber") {
+        if (emendaEmDisco.emenda.tipo === "emendaArtigoOndeCouber") {
           (query as any).ondeCouber = true;
         }
+
+        useAppStore().adicionarEmenda(emendaEmDisco);
+
         router.push({
           name: "edicao",
           query,
           params: {
-            emenda: JSON.stringify(emenda),
-            titulo: emenda.titulo,
+            emendaEmDisco: JSON.stringify(emendaEmDisco),
+            titulo: emendaEmDisco.metadados.titulo,
           },
         });
-
-        useAppStore().adicionarEmenda(emenda);
       }
     };
   }

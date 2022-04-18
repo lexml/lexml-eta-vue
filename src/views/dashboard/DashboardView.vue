@@ -157,7 +157,7 @@ function atualizarRota(evt: CustomEvent) {
 }
 
 function listarMinhasEmendas() {
-  const cfg = {
+  const cfg: DadosCard = {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     ...mapConfig.value.get("MinhasEmendas")!,
     lista: appStore.emendas,

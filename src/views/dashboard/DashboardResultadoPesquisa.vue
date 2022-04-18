@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent } from "vue";
-import { DadosCard, Proposicao, Emenda, AcaoPermitida } from "../../model";
+import { DadosCard, Proposicao, EmendaEmDisco, AcaoPermitida } from "../../model";
 
 const DashboardResultadoPesquisaItem = defineAsyncComponent(
   () => import("./DashboardResultadoPesquisaItem.vue")
@@ -41,15 +41,17 @@ interface Props {
 }
 defineProps<Props>();
 
-function getKey(item: Proposicao | Emenda, index: number) {
+function getKey(item: Proposicao | EmendaEmDisco, index: number) {
   if ("idIdentificacao" in item) {
     return (item as Proposicao).idIdentificacao + index;
+  } else if ("metadados" in item) {
+    return (item as EmendaEmDisco).metadados.id;
   } else {
-    return (item as Emenda).id;
+    return index;
   }
 }
 
-function getAcoesPermitidas(item: Proposicao | Emenda): AcaoPermitida[] {
+function getAcoesPermitidas(item: Proposicao | EmendaEmDisco): AcaoPermitida[] {
   if ("idIdentificacao" in item) {
     return ["criarEmenda"];
   } else {

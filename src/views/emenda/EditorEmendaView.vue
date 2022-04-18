@@ -5,7 +5,7 @@
       :numero="numero"
       :ano="ano"
       :onde-couber="ondeCouber"
-      :emenda="emenda"
+      :emenda-em-disco="emendaEmDisco"
       :titulo="(route.params.titulo as string)"
     />
   </div>
@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { Emenda } from "../../model";
+import { EmendaEmDisco } from "../../model";
 
 const EditorEmendaEdicao = defineAsyncComponent(() => import("./EditorEmendaEdicao.vue"));
 
@@ -24,7 +24,7 @@ const sigla = ref<string>();
 const numero = ref<string>();
 const ano = ref<number>();
 const ondeCouber = ref<boolean | undefined>();
-const emenda = ref<Emenda>();
+const emendaEmDisco = ref<EmendaEmDisco>();
 
 watch(
   () => route.query,
@@ -35,8 +35,8 @@ watch(
     if ("ondeCouber" in query && query.ondeCouber) {
       ondeCouber.value = !!query.ondeCouber;
     }
-    if (route.params.emenda) {
-      emenda.value = JSON.parse((route.params.emenda as string) || "{}");
+    if (route.params.emendaEmDisco) {
+      emendaEmDisco.value = JSON.parse((route.params.emendaEmDisco as string) || "{}");
     }
   },
   {

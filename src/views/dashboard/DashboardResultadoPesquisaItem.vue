@@ -2,7 +2,7 @@
   <div class="card-proposicao">
     <span class="card-proposicao-sigla">{{ getProposicaoFromObjeto(item).sigla }}</span>
     <div class="card-proposicao-body">
-      <card-emenda v-if="isEmenda(item)" :emenda="getEmendaFromObjeto(item)" />
+      <card-emenda v-if="isEmendaEmDisco(item)" :emenda="getEmendaFromObjeto(item)" />
       <card-proposicao :proposicao="getProposicaoFromObjeto(item)" />
       <acoes-permitidas-vue :item="item" :acoes-permitidas="acoesPermitidas" />
     </div>
@@ -11,15 +11,15 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { Proposicao, Emenda, AcaoPermitida } from "../../model";
-import { getProposicaoFromObjeto, isEmenda } from "../../utils/typeUtils";
+import { Proposicao, EmendaEmDisco, AcaoPermitida } from "../../model";
+import { getProposicaoFromObjeto, isEmendaEmDisco } from "../../utils/typeUtils";
 
 import CardEmenda from "../../components/comuns/CardEmenda.vue";
 import CardProposicao from "../../components/comuns/CardProposicao.vue";
 import AcoesPermitidasVue from "../../components/comuns/AcoesPermitidas.vue";
 
 interface Props {
-  item: Proposicao | Emenda;
+  item: Proposicao | EmendaEmDisco;
   acoesPermitidas: Array<AcaoPermitida>;
 }
 
@@ -27,8 +27,8 @@ const props = defineProps<Props>();
 const item = ref(props.item);
 const acoesPermitidas = ref(props.acoesPermitidas);
 
-function getEmendaFromObjeto(objeto: Proposicao | Emenda) {
-  return objeto as Emenda;
+function getEmendaFromObjeto(objeto: Proposicao | EmendaEmDisco) {
+  return objeto as EmendaEmDisco;
 }
 </script>
 

@@ -1,24 +1,20 @@
-import { Proposicao, Emenda } from "../model/index";
+import { Proposicao, EmendaEmDisco } from "../model/index";
 
-export const isEmenda = (dado: unknown): boolean =>
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-  "titulo" in (dado as any) && "proposicao" in (dado as any);
+export const isEmendaEmDisco = (dado: unknown): boolean =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  "emenda" in (dado as any);
 
-export const getProposicaoFromObjeto = (
-  objeto: Proposicao | Emenda
-): Proposicao => {
-  if (isEmenda(objeto)) {
-    return (objeto as Emenda).proposicao;
+export const getProposicaoFromObjeto = (objeto: Proposicao | EmendaEmDisco): Proposicao => {
+  if (isEmendaEmDisco(objeto)) {
+    return (objeto as EmendaEmDisco).emenda.proposicao;
   } else {
     return objeto as Proposicao;
   }
 };
 
-export const getObjetoAsEmenda = (
-  objeto: Proposicao | Emenda
-): Emenda | undefined => {
-  if (isEmenda(objeto)) {
-    return objeto as Emenda;
+export const getObjetoAsEmenda = (objeto: Proposicao | EmendaEmDisco): EmendaEmDisco | undefined => {
+  if (isEmendaEmDisco(objeto)) {
+    return objeto as EmendaEmDisco;
   } else {
     return undefined;
   }

@@ -42,7 +42,7 @@ export interface ConfigCard {
 }
 
 export interface DadosCard extends ConfigCard {
-  lista: Proposicao[] | Emenda[];
+  lista: Proposicao[] | EmendaEmDisco[];
   parametros?: ParametrosPesquisaProposicao;
 }
 export interface ParametrosPesquisaProposicao {
@@ -75,7 +75,7 @@ export enum TipoEmenda {
 }
 
 // TODO: Usar definição de "Emenda" do lexml-eta
-export interface EmendaLexml {
+export interface Emenda {
   tipo: TipoEmenda;
   numero?: number;
   proposicao: Proposicao;
@@ -88,15 +88,17 @@ export interface EmendaLexml {
   data?: string; // formato “YYYY-MM-DD”
   autoria?: any;
 }
-export interface Emenda extends EmendaLexml {
+export interface MetadadosEmenda {
   id?: string;
   titulo: string;
-}
-
-export interface EmendaEmDisco extends Emenda {
   path?: string;
   datAlteracao: Date;
   datUltimoAcesso: Date;
+}
+export interface EmendaEmDisco {
+  metadados: MetadadosEmenda;
+  projetoNorma?: any;
+  emenda: Emenda;
 }
 
 export interface AppState {

@@ -134,7 +134,7 @@
 <script setup lang="ts">
 import { useAppStore } from "../../stores/appStore";
 import { ref } from "vue";
-import { AcaoPermitida, Emenda, EmendaEmDisco, Proposicao } from "../../model";
+import { AcaoPermitida, EmendaEmDisco, Proposicao } from "../../model";
 import {
   criarEmenda,
   salvarEmenda,
@@ -144,18 +144,18 @@ import {
 } from "../../utils/acoes";
 
 interface Props {
-  item?: Proposicao | Emenda;
+  item?: Proposicao | EmendaEmDisco;
   acoesPermitidas: Array<AcaoPermitida>;
 }
 const props = defineProps<Props>();
 const acoesPermitidas = ref(props.acoesPermitidas);
 
 function _criarEmenda(ondeCouber = false) {
-  criarEmenda(props.item as Emenda, ondeCouber);
+  criarEmenda(props.item as EmendaEmDisco, ondeCouber);
 }
 
 function _salvarEmenda() {
-  salvarEmenda(props.item as Emenda);
+  salvarEmenda(props.item as EmendaEmDisco);
 }
 
 function _editarEmenda() {
@@ -164,7 +164,7 @@ function _editarEmenda() {
 
 const appStore = useAppStore();
 function removerDaLista() {
-  appStore.removerDaLista(props.item as Emenda);
+  appStore.removerDaLista(props.item as EmendaEmDisco);
 }
 </script>
 

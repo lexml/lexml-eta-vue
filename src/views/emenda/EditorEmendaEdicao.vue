@@ -24,7 +24,11 @@
           class="collapse navbar-collapse proposicao-actions"
           id="navbarSupportedContent"
         >
-          <acoes-permitidas v-if="emenda" :item="emenda" :acoes-permitidas="['salvar']" />
+          <acoes-permitidas
+            v-if="emendaEmDisco"
+            :item="emendaEmDisco"
+            :acoes-permitidas="['salvar']"
+          />
         </div>
       </div>
     </nav>
@@ -34,18 +38,18 @@
         <div class="row">
           <section class="col-md-7 col-sm-12">
             <input
-              v-if="emenda"
+              v-if="emendaEmDisco"
               type="input"
               class="form-control"
               placeholder="Título da emenda"
               aria-label="Título da emenda"
               required
-              v-model="emenda.titulo"
+              v-model="emendaEmDisco.metadados!.titulo"
             />
             <card-proposicao
               class="editar-emenda-dados"
-              v-if="emenda"
-              :proposicao="emenda.proposicao"
+              v-if="emendaEmDisco"
+              :proposicao="emendaEmDisco.emenda.proposicao"
             />
 
             <!-- BOTÕES QUE ATIVAM AS MODAIS -->
@@ -74,7 +78,7 @@
             <lexml-eta
               ref="lexmlEta"
               :modo="modoEmenda"
-              :projetoNorma="projetoNorma || {}"
+              :projetoNorma="emendaEmDisco?.projetoNorma || {}"
               @onchange="onChange"
             />
           </section>
@@ -82,7 +86,7 @@
             <editor-emenda-painel-lateral
               :itens-menu="itensMenu"
               :texto-rotulo-dispositivo="textoRotuloDispositivo"
-              :comando-emenda="emenda?.comandoEmenda"
+              :comando-emenda="emendaEmDisco?.emenda.comandoEmenda"
             />
           </aside>
         </div>
@@ -92,7 +96,7 @@
     <editor-emenda-painel-modal
       :itens-menu="itensMenu"
       :texto-rotulo-dispositivo="textoRotuloDispositivo"
-      :comando-emenda="emenda?.comandoEmenda"
+      :comando-emenda="emendaEmDisco?.emenda.comandoEmenda"
     />
   </div>
 </template>
@@ -131,7 +135,7 @@ lexml-eta-articulacao {
 import lexmlJsonixService from "../../servicos/lexmlJsonixService";
 import proposicaoService from "../..//servicos/proposicaoService";
 import { ref, onMounted, defineAsyncComponent } from "vue";
-import { Emenda, TipoEmenda } from "../../model";
+import { EmendaEmDisco, TipoEmenda } from "../../model";
 
 const AcoesPermitidas = defineAsyncComponent(
   () => import("../../components/comuns/AcoesPermitidas.vue")
@@ -153,7 +157,7 @@ interface Props {
   sigla: string;
   numero: string;
   ano: number;
-  emenda?: Emenda;
+  emendaEmDisco?: EmendaEmDisco;
   titulo?: string;
   ondeCouber?: boolean;
 }
@@ -166,47 +170,65 @@ const itensMenu = ref<string[]>([]);
 const textoRotuloDispositivo = ref("");
 const lexmlEta = ref();
 
-const emenda = ref<Emenda>();
+const emendaEmDisco = ref<EmendaEmDisco>();
 const modoEmenda = ref("emenda");
-const projetoNorma = ref();
 
 onMounted(async () => {
   loading.value = true;
-  Promise.all([
-    proposicaoService.buscarProposicao(props.sigla, props.numero, props.ano),
-    lexmlJsonixService.buscarTextoLexmlAsJson(props.sigla, props.numero, props.ano),
-  ])
-    .then((results) => {
-      projetoNorma.value = results[1] || {};
-
-      emenda.value = props.emenda || {
-        tipo: props.ondeCouber ? TipoEmenda.EMENDA_ARTIGO_ONDE_COUBER : TipoEmenda.EMENDA,
-        titulo: "",
-        proposicao: props.emenda
-          ? (props.emenda as Emenda).proposicao
-          : {
-            ...results[0],
-            urn: projetoNorma.value.value.metadado?.identificacao?.urn,
-            identificacao: results[0].descricaoIdentificacao,
-          },
-      };
-
-      modoEmenda.value = emenda.value.tipo;
-
-      // Define valor inicial para que o componente "reconheça" a mudança de valor
-      // O setTimeout é usado para colocar o código no final da fila de processamento
+  if (props.emendaEmDisco) {
+    setTimeout(() => {
+      emendaEmDisco.value = props.emendaEmDisco;
+      modoEmenda.value = emendaEmDisco!.value!.emenda.tipo;
       lexmlEta.value.dispositivosEmenda = {};
       setTimeout(() => {
-        lexmlEta.value.dispositivosEmenda = emenda.value?.dispositivos || {};
+        lexmlEta.value.dispositivosEmenda =
+          emendaEmDisco.value?.emenda.dispositivos || {};
       }, 0);
-    })
-    .finally(() => (loading.value = false));
+      loading.value = false;
+    }, 400);
+  } else {
+    Promise.all([
+      proposicaoService.buscarProposicao(props.sigla, props.numero, props.ano),
+      lexmlJsonixService.buscarTextoLexmlAsJson(props.sigla, props.numero, props.ano),
+    ])
+      .then((results) => {
+        emendaEmDisco.value = {
+          metadados: {
+            titulo: "",
+            datAlteracao: new Date(),
+            datUltimoAcesso: new Date(),
+          },
+          projetoNorma: results[1] || {},
+          emenda: {
+            tipo: props.ondeCouber
+              ? TipoEmenda.EMENDA_ARTIGO_ONDE_COUBER
+              : TipoEmenda.EMENDA,
+            proposicao: {
+              ...results[0],
+              urn: (results[1] as any).value.metadado?.identificacao?.urn,
+              identificacao: results[0].descricaoIdentificacao,
+            },
+          },
+        };
+
+        modoEmenda.value = emendaEmDisco!.value!.emenda.tipo;
+
+        // Define valor inicial para que o componente "reconheça" a mudança de valor
+        // O setTimeout é usado para colocar o código no final da fila de processamento
+        lexmlEta.value.dispositivosEmenda = {};
+        setTimeout(() => {
+          lexmlEta.value.dispositivosEmenda =
+            emendaEmDisco.value?.emenda.dispositivos || {};
+        }, 0);
+      })
+      .finally(() => (loading.value = false));
+  }
 });
 
 function onChange() {
-  if (emenda.value) {
-    emenda.value.dispositivos = lexmlEta.value.getDispositivosEmenda();
-    emenda.value.comandoEmenda = lexmlEta.value.getComandoEmenda();
+  if (emendaEmDisco.value) {
+    emendaEmDisco.value.emenda.dispositivos = lexmlEta.value.getDispositivosEmenda();
+    emendaEmDisco.value.emenda.comandoEmenda = lexmlEta.value.getComandoEmenda();
   }
 }
 
