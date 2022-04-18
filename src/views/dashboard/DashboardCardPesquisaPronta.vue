@@ -1,6 +1,6 @@
 <template>
   <div
-    class="col-lg-3 col-sm-12 d-flex align-items-stretch"
+    class="col-sm-12 col-md-6 col-lg-4 offset-lg-2 d-flex align-items-stretch"
     @click="emitirEventoCardClick"
     ref="root"
   >

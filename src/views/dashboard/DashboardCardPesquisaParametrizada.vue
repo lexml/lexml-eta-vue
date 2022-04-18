@@ -1,5 +1,5 @@
 <template>
-  <div class="col-lg-3 col-sm-12 d-flex align-items-stretch">
+  <div class="col-sm-12 col-md-6 col-lg-4 d-flex align-items-stretch">
     <div
       class="card-dashboard card-search"
       :class="{
