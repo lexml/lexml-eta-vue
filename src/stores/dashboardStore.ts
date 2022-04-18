@@ -1,4 +1,4 @@
-import { IParametrosPesquisaProposicao } from "./../model/index";
+import { ParametrosPesquisaProposicao } from "./../model/index";
 import { defineStore } from "pinia";
 import { DashBoardState, DadosCard, Proposicao } from "../model";
 
@@ -11,7 +11,6 @@ export const useDashboardStore = defineStore({
       totalItens: 0,
       lista: [],
       parametros: {
-        tipoPesquisa: "MinhasEmendas",
         sigla: "MPV",
         numero: undefined,
         ano: 2022,
@@ -34,9 +33,7 @@ export const useDashboardStore = defineStore({
     setProposicoesRecentes(proposicoes: Proposicao[]) {
       this.proposicoesRecentes = proposicoes;
     },
-    setParametrosPesquisaProposicao(
-      parametros: IParametrosPesquisaProposicao
-    ) {
+    setParametrosPesquisaProposicao(parametros: ParametrosPesquisaProposicao) {
       this.parametrosPesquisaProposicao = parametros;
     },
   },
