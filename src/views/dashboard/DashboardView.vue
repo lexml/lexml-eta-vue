@@ -5,8 +5,8 @@
         :key="mapConfig.get('MinhasEmendas')!.totalItens"
         :config="mapConfig.get('MinhasEmendas')!"
       />
-      <dashboard-card-pesquisa-pronta :config="mapConfig.get('PrazoEmendaAberto')!" />
-      <dashboard-card-pesquisa-pronta :config="mapConfig.get('EmTramitacao')!" />
+      <!-- <dashboard-card-pesquisa-pronta :config="mapConfig.get('PrazoEmendaAberto')!" />
+      <dashboard-card-pesquisa-pronta :config="mapConfig.get('EmTramitacao')!" /> -->
       <dashboard-card-pesquisa-parametrizada :config="parametrosPesquisaProposicao" />
     </div>
 
