@@ -1,10 +1,10 @@
 <template>
-    <header-area />
-    <div class="bs-eta">
-        <router-view />
-    </div>
-    <footer-area v-if="false" />
-    <icones-svg />
+  <header-area />
+  <div class="bs-eta">
+    <router-view />
+  </div>
+  <footer-area v-if="false" />
+  <icones-svg />
 </template>
 
 <script setup lang="ts">
@@ -16,13 +16,13 @@ import acoes from './utils/acoes';
 acoes.configModulo(useRouter());
 
 const HeaderArea = defineAsyncComponent(
-    () => import("./components/layout/HeaderArea.vue")
+  () => import("./components/layout/HeaderArea.vue")
 );
 const FooterArea = defineAsyncComponent(
-    () => import("./components/layout/FooterArea.vue")
+  () => import("./components/layout/FooterArea.vue")
 );
 const IconesSvg = defineAsyncComponent(
-    () => import("./components/comuns/IconesSvg.vue")
+  () => import("./components/comuns/IconesSvg.vue")
 );
 
 const appStore = useAppStore();

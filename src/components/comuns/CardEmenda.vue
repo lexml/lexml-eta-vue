@@ -1,7 +1,7 @@
 <template>
-    <div class="card-proposicao-header">
-        <span class="card-proposicao-title">{{ emenda.titulo }}</span>
-    </div>
+  <div class="card-proposicao-header">
+    <span class="card-proposicao-title">{{ emenda.titulo }}</span>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -9,7 +9,7 @@ import { ref } from 'vue';
 import { Emenda } from "../../model";
 
 interface Props {
-    emenda: Emenda;
+  emenda: Emenda;
 }
 
 const props = defineProps<Props>();

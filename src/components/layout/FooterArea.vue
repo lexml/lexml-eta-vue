@@ -1,9 +1,9 @@
 <template>
-    <footer class="footer mt-auto py-3">
-        <div class="container">
-            <span class>Câmara dos Deputados</span>
-        </div>
-    </footer>
+  <footer class="footer mt-auto py-3">
+    <div class="container">
+      <span class>Câmara dos Deputados</span>
+    </div>
+  </footer>
 </template>
 
 <style scoped>

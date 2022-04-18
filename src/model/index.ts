@@ -1,81 +1,104 @@
 export interface Proposicao {
-    idIdentificacao: number;
-    descricaoIdentificacao: string;
-    descricaoIdentificacaoExtensa: string;
-    sigla: string;
-    numero: string;
-    ano: number;
-    ementa: string;
-    idSdlegDocumentoDigital?: string;
-    idSdlegDocumentoItemDigital?: string;
-    urlDownloadItemDigitalZip?: string;
+  idIdentificacao: number;
+  descricaoIdentificacao: string;
+  descricaoIdentificacaoExtensa: string;
+  sigla: string;
+  numero: string;
+  ano: number;
+  ementa: string;
+  idSdlegDocumentoDigital?: string;
+  idSdlegDocumentoItemDigital?: string;
+  urlDownloadItemDigitalZip?: string;
+
+  // TODO: compatibilização com definição da classe RefProposicaoEmendada do lexml-eta
+  //       fazer ajustes para evitar campos redundantes
+  urn: string;
+  identificacao: string;
+  genero?: "M" | "F";
+  substitutivo?: boolean;
+  identificacaoTexto: string;
 }
 
 export type AcaoPermitida =
-    | "abrir"
-    | "editar"
-    | "removerEmendaDaLista"
-    | "excluir"
-    | "salvar"
-    | "compartilhar"
-    | "autenticar"
-    | "criarEmendaPadrao"
-    | "criarEmendaArtigoOndeCouber"
-    | "exibirQuadroEmendas";
+  | "abrir"
+  | "abrirDoDisco"
+  | "editar"
+  | "removerEmendaDaLista"
+  | "excluir"
+  | "salvar"
+  | "compartilhar"
+  | "autenticar"
+  | "criarEmenda"
+  | "exibirQuadroEmendas";
 
-export type TipoCard =
-    | "MinhasEmendas"
-    | "PrazoEmendaAberto"
-    | "EmTramitacao"
-    | "Parametrizada"
-    | undefined;
+export type TipoCard = "MinhasEmendas" | "PrazoEmendaAberto" | "EmTramitacao" | "Parametrizada";
 
-export interface ParametrosPesquisa {
-    tipoPesquisa: TipoCard;
-    sigla: string;
-    numero?: string;
-    ano: number;
-    pagina?: number;
+export interface ConfigCard {
+  tipo: TipoCard;
+  titulo: string;
+  subtitulo?: string;
+  totalItens: number;
+  icone?: string;
 }
-export interface DadosCard {
-    tipo: TipoCard;
-    titulo: string;
-    totalItens: number;
-    lista: Proposicao[] | Emenda[];
-    parametros?: ParametrosPesquisa;
+
+export interface DadosCard extends ConfigCard {
+  lista: Proposicao[] | Emenda[];
+  parametros?: ParametrosPesquisaProposicao;
+}
+export interface ParametrosPesquisaProposicao {
+  sigla: string;
+  numero?: string;
+  ano: number;
+  pagina?: number;
 }
 
 export interface RootState {
-    version: string;
+  version: string;
 }
 export interface DashBoardState {
-    cardAtivo: DadosCard;
+  cardAtivo: DadosCard;
 
-    proposicoesRecentes: Proposicao[];
-    minhasEmendas: [];
-    parametrosPesquisaProposicao: IParametrosPesquisaProposicao;
+  proposicoesRecentes: Proposicao[];
+  minhasEmendas: [];
+  parametrosPesquisaProposicao: ParametrosPesquisaProposicao;
 }
 
-export interface Emenda {
-    id?: string;
-    titulo: string;
-    proposicao: Proposicao;
-    projetoNorma?: any;
-    emendaLexml?: any;
+export interface DestinoEmenda {
+  siglaCasaLegislativa: "CN" | "SF" | "CD";
+  tipoColegiado: "Plenário" | "Comissão";
+  siglaComissao?: string;
 }
 
-export interface IParametrosPesquisaProposicao {
-    sigla?: string;
-    numero?: string;
-    ano?: number;
+export enum TipoEmenda {
+  EMENDA = "emenda",
+  EMENDA_ARTIGO_ONDE_COUBER = "emendaArtigoOndeCouber",
+}
+
+// TODO: Usar definição de "Emenda" do lexml-eta
+export interface EmendaLexml {
+  tipo: TipoEmenda;
+  numero?: number;
+  proposicao: Proposicao;
+  destino?: any;
+  epigrafe?: any;
+  dispositivos?: any;
+  comandoEmenda?: any;
+  justificativa?: "";
+  local?: "";
+  data?: string; // formato “YYYY-MM-DD”
+  autoria?: any;
+}
+export interface Emenda extends EmendaLexml {
+  id?: string;
+  titulo: string;
 }
 
 export interface EmendaEmDisco extends Emenda {
-    path?: string;
-    datAlteracao: Date;
-    datUltimoAcesso: Date;
+  path?: string;
+  datAlteracao: Date;
+  datUltimoAcesso: Date;
 }
 
 export interface AppState {
-    emendas: EmendaEmDisco[];
+  emendas: EmendaEmDisco[];
 }

@@ -1,44 +1,46 @@
 <template>
-    <div>
-        <dashboard-cards @card-click="atualizarRota" />
-        <div v-if="loading" class="container">
-            <span>Carregando...</span>
-        </div>
-        <dashboard-resultado-pesquisa v-else :dados="dados">
-            <div v-if="dados?.tipo === 'MinhasEmendas'">
-                <acoes-permitidas :acoes-permitidas="['abrir']" />
-            </div>
-        </dashboard-resultado-pesquisa>
+  <div class="container">
+    <div class="row" @card-click="atualizarRota">
+      <dashboard-card-pesquisa-pronta
+        :key="mapConfig.get('MinhasEmendas')!.totalItens"
+        :config="mapConfig.get('MinhasEmendas')!"
+      />
+      <dashboard-card-pesquisa-pronta :config="mapConfig.get('PrazoEmendaAberto')!" />
+      <dashboard-card-pesquisa-pronta :config="mapConfig.get('EmTramitacao')!" />
+      <dashboard-card-pesquisa-parametrizada :config="parametrosPesquisaProposicao" />
     </div>
+
+    <div v-if="loading">
+      <span>Carregando...</span>
+    </div>
+
+    <dashboard-resultado-pesquisa v-else :dados="dados">
+      <div v-if="dados?.tipo === 'MinhasEmendas'">
+        <acoes-permitidas :acoes-permitidas="['abrirDoDisco']" />
+      </div>
+    </dashboard-resultado-pesquisa>
+  </div>
 </template>
 
 <script setup lang="ts">
-import {
-    defineAsyncComponent,
-    ref,
-    watch,
-    onMounted
-} from "vue";
+import { defineAsyncComponent, ref, watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useDashboardStore } from "../../stores/dashboardStore";
-import {
-    TipoCard,
-    DadosCard,
-    ParametrosPesquisa,
-    Proposicao,
-    Emenda
-} from "../../model";
-import proposicaoService from '../../servicos/proposicaoService';
+import { TipoCard, DadosCard, ParametrosPesquisaProposicao } from "../../model";
+import proposicaoService from "../../servicos/proposicaoService";
 import { useAppStore } from "../../stores/appStore";
 
-const DashboardCards = defineAsyncComponent(
-    () => import("./DashboardCards.vue")
+const DashboardCardPesquisaPronta = defineAsyncComponent(
+  () => import("./DashboardCardPesquisaPronta.vue")
+);
+const DashboardCardPesquisaParametrizada = defineAsyncComponent(
+  () => import("./DashboardCardPesquisaParametrizada.vue")
 );
 const DashboardResultadoPesquisa = defineAsyncComponent(
-    () => import("./DashboardResultadoPesquisa.vue")
+  () => import("./DashboardResultadoPesquisa.vue")
 );
 const AcoesPermitidas = defineAsyncComponent(
-    () => import("../../components/comuns/AcoesPermitidas.vue")
+  () => import("../../components/comuns/AcoesPermitidas.vue")
 );
 
 let dados = ref<DadosCard>();
@@ -47,122 +49,166 @@ const route = useRoute();
 const router = useRouter();
 const loading = ref(false);
 
-watch(() => route.query, () => {
-    pesquisarPorParametrosDaRota();
-}, {
-    deep: true,
+const mapConfig = ref<Map<TipoCard, DadosCard>>(new Map());
+
+mapConfig.value.set("MinhasEmendas", {
+  tipo: "MinhasEmendas",
+  titulo: "Minhas Emendas",
+  subtitulo: "Acesse as emendas que você está trabalhando",
+  totalItens: 0,
+  icone: "person-workspace",
+  lista: [],
 });
 
-onMounted(() => {
-    pesquisarPorParametrosDaRota();
+mapConfig.value.set("PrazoEmendaAberto", {
+  tipo: "PrazoEmendaAberto",
+  titulo: "Proposições com prazo de emendamento aberto",
+  subtitulo: "Veja as proposições que estão com prazo de emendamento aberto",
+  totalItens: 0,
+  icone: "hourglass-split",
+  lista: [],
 });
 
-function pesquisarPorParametrosDaRota() {
-    const { sigla, numero, ano, tipoPesquisa, pagina } = route.query;
-    pesquisar(sigla?.toString(), numero?.toString(), Number(ano?.toString()), tipoPesquisa?.toString() as TipoCard, Number(pagina?.toString()));
-}
+mapConfig.value.set("EmTramitacao", {
+  tipo: "EmTramitacao",
+  titulo: "Proposições em tramitação",
+  subtitulo: "Lista com todas as proposições em tramitação",
+  totalItens: 0,
+  icone: "arrow-left-right",
+  lista: [],
+});
 
-function pesquisar(sigla = 'MPV', numero?: string, ano?: number, tipoPesquisa: TipoCard = 'Parametrizada', pagina = 1) {
-    loading.value = true;
-    if (tipoPesquisa === 'MinhasEmendas') {
-        listarMinhasEmendas();
-    } else {
-        pesquisarProposicoes({
-            sigla,
-            numero,
-            ano: !ano || isNaN(ano) ? new Date().getFullYear() : ano,
-            tipoPesquisa,
-            pagina: isNaN(pagina) ? 1 : pagina
-        });
-    }
-}
+mapConfig.value.set("Parametrizada", {
+  tipo: "Parametrizada",
+  titulo: "Parametrizada",
+  subtitulo: "",
+  totalItens: 0,
+  icone: "search",
+  lista: [],
+});
 
-function atualizarRota(evt: CustomEvent) {
-    let query = {
-        tipoPesquisa: evt.detail.tipo
-    };
-
-    if (evt.detail.tipo === 'Parametrizada') {
-        query = {
-            ...query,
-            ...evt.detail.parametros,
-        };
-    }
-
-    router.push({
-        path: '/',
-        query
-    });
-}
+const parametrosPesquisaProposicao = ref<ParametrosPesquisaProposicao>();
 
 const appStore = useAppStore();
 
+watch(
+  () => route.query,
+  () => pesquisarPorParametrosDaRota(),
+  { deep: true }
+);
+
+watch(
+  () => appStore.emendas,
+  () => listarMinhasEmendas()
+);
+
+onMounted(() => {
+  listarMinhasEmendas();
+  pesquisarPorParametrosDaRota();
+});
+
+function pesquisarPorParametrosDaRota() {
+  const { sigla, numero, ano, tipoPesquisa, pagina } = route.query;
+
+  if (tipoPesquisa === "MinhasEmendas") {
+    listarMinhasEmendas();
+  } else if (tipoPesquisa === "PrazoEmendaAberto") {
+    listarProposicoesComPrazoEmendaAberto();
+  } else if (tipoPesquisa === "EmTramitacao") {
+    listarProposicoesEmTramitacao();
+  } else {
+    pesquisar(
+      sigla?.toString(),
+      numero?.toString(),
+      Number(ano?.toString()),
+      tipoPesquisa?.toString() as TipoCard,
+      Number(pagina?.toString())
+    );
+  }
+}
+
+function pesquisar(
+  sigla = "MPV",
+  numero?: string,
+  ano?: number,
+  tipoPesquisa: TipoCard = "Parametrizada",
+  pagina = 1
+) {
+  loading.value = true;
+  if (tipoPesquisa === "MinhasEmendas") {
+    listarMinhasEmendas();
+  } else {
+    parametrosPesquisaProposicao.value = {
+      sigla,
+      numero,
+      ano: !ano || isNaN(ano) ? new Date().getFullYear() : ano,
+      pagina: isNaN(pagina) ? 1 : pagina,
+    };
+    pesquisarProposicoes(parametrosPesquisaProposicao.value, tipoPesquisa);
+  }
+}
+
+function atualizarRota(evt: CustomEvent) {
+  let query = { tipoPesquisa: evt.detail.tipo };
+  if (evt.detail.tipo === "Parametrizada") {
+    query = { ...query, ...evt.detail.parametros };
+  }
+  router.push({ path: "/", query });
+}
+
 function listarMinhasEmendas() {
-    dados.value = {
-        tipo: 'MinhasEmendas',
-        titulo: 'Minhas Emendas',
-        totalItens: appStore.emendas.length,
-        lista: appStore.emendas,
-    };
-    dashboardStore.setDadosCardAtivo(dados.value);
-    loading.value = false;
+  const cfg = {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    ...mapConfig.value.get("MinhasEmendas")!,
+    lista: appStore.emendas,
+    totalItens: appStore.emendas.length,
+  };
+
+  mapConfig.value.set("MinhasEmendas", cfg);
+  dados.value = cfg;
+  dashboardStore.setDadosCardAtivo(cfg);
+  loading.value = false;
 }
 
-function pesquisarProposicoes(parametros: ParametrosPesquisa) {
-    const tempConfigPesquisa = {
-        "MinhasEmendas": {
-            sigla: 'MPV',
-            numero: undefined,
-            ano: 2019,
-            pagina: 1,
-        },
-        "PrazoEmendaAberto": {
-            sigla: 'MPV',
-            numero: undefined,
-            ano: 2020,
-            pagina: 1,
-        },
-        "EmTramitacao": {
-            sigla: 'MPV',
-            numero: undefined,
-            ano: 2021,
-            pagina: 1,
-        },
-        "Parametrizada": {
-            sigla: parametros.sigla,
-            numero: parametros.numero,
-            ano: parametros.ano,
-            pagina: parametros.pagina,
-        }
-    };
-
-    const chave = parametros.tipoPesquisa || 'Parametrizada';
-    tempConfigPesquisa[chave].pagina = parametros.pagina;
-    const params = tempConfigPesquisa[chave];
-    proposicaoService.buscarProposicoes(params.sigla, params.numero, params.ano).then((proposicoes) => {
-        dados.value = {
-            tipo: chave,
-            titulo: chave,
-            totalItens: proposicoes.length,
-            lista: parametros.tipoPesquisa === 'MinhasEmendas' ? convertToMinhasEmendas(proposicoes) : proposicoes,
-            parametros: {
-                tipoPesquisa: chave,
-                sigla: params.sigla,
-                numero: params.numero,
-                ano: params.ano,
-                pagina: params.pagina,
-            },
-        };
-        dashboardStore.setDadosCardAtivo(dados.value);
-    }).finally(() => loading.value = false);
+function listarProposicoesComPrazoEmendaAberto() {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const cfg = mapConfig.value.get("PrazoEmendaAberto")!;
+  dados.value = cfg;
+  dashboardStore.setDadosCardAtivo(dados.value);
+  loading.value = false;
 }
 
-function convertToMinhasEmendas(proposicoes: Proposicao[]): Emenda[] {
-    return proposicoes.map((proposicao, index) => ({
-        titulo: 'Minha Emenda ' + (index + 1),
-        proposicao,
-    }));
+function listarProposicoesEmTramitacao() {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const cfg = mapConfig.value.get("EmTramitacao")!;
+  dados.value = cfg;
+  dashboardStore.setDadosCardAtivo(dados.value);
+  loading.value = false;
+}
+
+function pesquisarProposicoes(
+  parametros: ParametrosPesquisaProposicao,
+  tipoPesquisa: TipoCard
+) {
+  const { sigla, numero, ano, pagina } = parametros;
+  proposicaoService
+    .buscarProposicoes(sigla, numero, ano)
+    .then((proposicoes) => {
+      dados.value = {
+        tipo: tipoPesquisa,
+        titulo: tipoPesquisa,
+        totalItens: proposicoes.length,
+        lista: proposicoes,
+        parametros: {
+          sigla: sigla,
+          numero: numero,
+          ano: ano,
+          pagina: pagina,
+        },
+      };
+      dashboardStore.setDadosCardAtivo(dados.value);
+    })
+    .finally(() => (loading.value = false));
 }
 </script>
-<style scoped src='../../assets/css/listaproposicao.css'>
-</style>
+<style scoped src="../../assets/css/listaproposicao.css"></style>
