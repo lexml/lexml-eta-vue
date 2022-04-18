@@ -45,6 +45,11 @@
         </svg>
       </span>
       Nova emenda
+      <span class="btn-label">
+        <svg class="bi proposicao-action-icon">
+          <use xlink:href="#caret-down-fill" />
+        </svg>
+      </span>
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
       <li>
