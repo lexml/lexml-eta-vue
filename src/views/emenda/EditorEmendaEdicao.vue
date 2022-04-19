@@ -194,6 +194,7 @@ onMounted(async () => {
       .then((results) => {
         emendaEmDisco.value = {
           metadados: {
+            versao: "1",
             titulo: "",
             datAlteracao: new Date(),
             datUltimoAcesso: new Date(),
@@ -204,9 +205,14 @@ onMounted(async () => {
               ? TipoEmenda.EMENDA_ARTIGO_ONDE_COUBER
               : TipoEmenda.EMENDA,
             proposicao: {
-              ...results[0],
               urn: (results[1] as any).value.metadado?.identificacao?.urn,
-              identificacao: results[0].descricaoIdentificacao,
+              sigla: results[0].sigla,
+              numero: results[0].numero,
+              ano: results[0].ano,
+              ementa: results[0].ementa,
+              genero: "M", // TODO: tornar dinâmico
+              substitutivo: false, // TODO: tornar dinâmico
+              identificacaoTexto: results[0].descricaoIdentificacaoExtensa,
             },
           },
         };

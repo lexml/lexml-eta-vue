@@ -1,5 +1,5 @@
 import { EmendaEmDisco, Proposicao } from "./../model/index";
-import { getProposicaoFromObjeto } from "./typeUtils";
+import { getProposicaoBasicaFromObjeto } from "./typeUtils";
 import { generateUUID } from "./geral";
 import { useAppStore } from "../stores/appStore";
 import { Router } from "vue-router";
@@ -12,7 +12,7 @@ export default {
 
 export const criarEmenda = (item: EmendaEmDisco | Proposicao, ondeCouber?: boolean): void => {
   if (item) {
-    const { sigla, numero, ano } = getProposicaoFromObjeto(item);
+    const { sigla, numero, ano } = getProposicaoBasicaFromObjeto(item);
     const query = {
       sigla,
       numero,

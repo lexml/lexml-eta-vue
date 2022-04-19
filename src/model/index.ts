@@ -1,22 +1,17 @@
-export interface Proposicao {
-  idIdentificacao: number;
-  descricaoIdentificacao: string;
-  descricaoIdentificacaoExtensa: string;
+export interface ProposicaoBasica {
   sigla: string;
   numero: string;
   ano: number;
   ementa: string;
+}
+
+export interface Proposicao extends ProposicaoBasica {
+  idIdentificacao: number;
+  descricaoIdentificacao: string;
+  descricaoIdentificacaoExtensa: string;
   idSdlegDocumentoDigital?: string;
   idSdlegDocumentoItemDigital?: string;
   urlDownloadItemDigitalZip?: string;
-
-  // TODO: compatibilização com definição da classe RefProposicaoEmendada do lexml-eta
-  //       fazer ajustes para evitar campos redundantes
-  urn: string;
-  identificacao: string;
-  genero?: "M" | "F";
-  substitutivo?: boolean;
-  identificacaoTexto: string;
 }
 
 export type AcaoPermitida =
@@ -74,11 +69,19 @@ export enum TipoEmenda {
   EMENDA_ARTIGO_ONDE_COUBER = "emendaArtigoOndeCouber",
 }
 
+type Genero = "M" | "F";
+export interface RefProposicaoEmendada extends ProposicaoBasica {
+  urn: string;
+  genero: Genero;
+  substitutivo: false;
+  identificacaoTexto: string;
+}
+
 // TODO: Usar definição de "Emenda" do lexml-eta
 export interface Emenda {
   tipo: TipoEmenda;
   numero?: number;
-  proposicao: Proposicao;
+  proposicao: RefProposicaoEmendada;
   destino?: any;
   epigrafe?: any;
   dispositivos?: any;
@@ -88,7 +91,9 @@ export interface Emenda {
   data?: string; // formato “YYYY-MM-DD”
   autoria?: any;
 }
+export type VersaoMetadadoEmenda = "1";
 export interface MetadadosEmenda {
+  versao: VersaoMetadadoEmenda;
   id?: string;
   titulo: string;
   path?: string;

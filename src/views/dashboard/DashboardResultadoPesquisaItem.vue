@@ -1,9 +1,9 @@
 <template>
   <div class="card-proposicao">
-    <span class="card-proposicao-sigla">{{ getProposicaoFromObjeto(item).sigla }}</span>
+    <span class="card-proposicao-sigla">{{ getProposicaoBasicaFromObjeto(item).sigla }}</span>
     <div class="card-proposicao-body">
       <card-emenda v-if="isEmendaEmDisco(item)" :emenda="getEmendaFromObjeto(item)" />
-      <card-proposicao :proposicao="getProposicaoFromObjeto(item)" />
+      <card-proposicao :proposicao="getProposicaoBasicaFromObjeto(item)" />
       <acoes-permitidas-vue :item="item" :acoes-permitidas="acoesPermitidas" />
     </div>
   </div>
@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Proposicao, EmendaEmDisco, AcaoPermitida } from "../../model";
-import { getProposicaoFromObjeto, isEmendaEmDisco } from "../../utils/typeUtils";
+import { getProposicaoBasicaFromObjeto, isEmendaEmDisco } from "../../utils/typeUtils";
 
 import CardEmenda from "../../components/comuns/CardEmenda.vue";
 import CardProposicao from "../../components/comuns/CardProposicao.vue";
@@ -32,4 +32,5 @@ function getEmendaFromObjeto(objeto: Proposicao | EmendaEmDisco) {
 }
 </script>
 
-<style scoped src="../../assets/css/listaproposicao.css"></style>
+<style scoped src="../../assets/css/listaproposicao.css">
+</style>
