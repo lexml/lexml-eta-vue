@@ -2,6 +2,7 @@
   <span class="proposicao-actions">
     <button
       v-if="acoesPermitidas.includes('abrir')"
+      disabled
       type="button"
       class="btn btn-labeled proposicao-action"
       @click="_editarEmenda"
@@ -63,6 +64,7 @@
 
     <button
       v-if="acoesPermitidas.includes('salvar')"
+      disabled
       type="button"
       class="btn btn-labeled proposicao-action"
       @click="_salvarEmenda"
