@@ -217,15 +217,16 @@ onMounted(async () => {
           },
         };
 
-        modoEmenda.value = emendaEmDisco!.value!.emenda.tipo;
+        modoEmenda.value = emendaEmDisco.value.emenda.tipo;
 
         // Define valor inicial para que o componente "reconheça" a mudança de valor
         // O setTimeout é usado para colocar o código no final da fila de processamento
-        lexmlEta.value.dispositivosEmenda = {};
-        setTimeout(() => {
-          lexmlEta.value.dispositivosEmenda =
-            emendaEmDisco.value?.emenda.dispositivos || {};
-        }, 0);
+        // lexmlEta.value.dispositivosEmenda = {};
+        // setTimeout(() => {
+        //   lexmlEta.value.dispositivosEmenda =
+        //     emendaEmDisco.value?.emenda.dispositivos || {};
+        // }, 0);
+        lexmlEta.value.dispositivosEmenda = emendaEmDisco.value?.emenda.dispositivos;
       })
       .finally(() => (loading.value = false));
   }
